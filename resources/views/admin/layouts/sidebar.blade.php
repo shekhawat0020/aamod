@@ -82,7 +82,7 @@
     @endcan
 	
 	
-	<li class="slide">
+	<!--<li class="slide">
             <a class="side-menu__item" data-toggle="slide" href="#"><i class="side-menu__icon ti-user"></i><span class="side-menu__label">Post</span><i class="angle fa fa-angle-right"></i></a>
             <ul class="slide-menu">
                 <li>
@@ -92,7 +92,7 @@
                     <a href="{{ route('post-create') }}" class="slide-item">Create Post<a>
                 </li>
             </ul>
-        </li>
+        </li>-->
 		
 		
 
