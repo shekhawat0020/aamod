@@ -81,18 +81,44 @@
         </li>
     @endcan
 	
-	
-	<!--<li class="slide">
-            <a class="side-menu__item" data-toggle="slide" href="#"><i class="side-menu__icon ti-user"></i><span class="side-menu__label">Post</span><i class="angle fa fa-angle-right"></i></a>
+	@can('Borrower Master')
+        <li class="slide">
+            <a class="side-menu__item" data-toggle="slide" href="#"><i class="side-menu__icon ti-user"></i><span class="side-menu__label">Borrower</span><i class="angle fa fa-angle-right"></i></a>
             <ul class="slide-menu">
+            @can('Borrower List')
                 <li>
-                    <a href="{{ route('post-list') }}" class="slide-item">Post List<a>
+                    <a href="{{ route('borrower-list') }}" class="slide-item">Borrower List<a>
                 </li>
+            @endcan
+            @can('Borrower Create')
                 <li>
-                    <a href="{{ route('post-create') }}" class="slide-item">Create Post<a>
+                    <a href="{{ route('borrower-create') }}" class="slide-item">Create Borrower<a>
                 </li>
+            @endcan
             </ul>
-        </li>-->
+        </li>
+    @endcan
+	
+	@can('Loan Type Master')
+        <li class="slide">
+            <a class="side-menu__item" data-toggle="slide" href="#"><i class="side-menu__icon ti-user"></i><span class="side-menu__label">Loan Type</span><i class="angle fa fa-angle-right"></i></a>
+            <ul class="slide-menu">
+            @can('Loan Type List')
+                <li>
+                    <a href="{{ route('loan-type-list') }}" class="slide-item">Loan Type List<a>
+                </li>
+            @endcan
+            @can('Loan Type Create')
+                <li>
+                    <a href="{{ route('loan-type-create') }}" class="slide-item">Create Loan Type<a>
+                </li>
+            @endcan
+            </ul>
+        </li>
+    @endcan
+	
+	
+	
 		
 		
 

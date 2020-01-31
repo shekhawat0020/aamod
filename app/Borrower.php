@@ -7,7 +7,7 @@ use Laravel\Passport\HasApiTokens;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
-class ApiUser extends Authenticatable
+class Borrower extends Authenticatable
 {
     use Notifiable;
     use HasApiTokens;
@@ -17,7 +17,7 @@ class ApiUser extends Authenticatable
      *
      * @var array
      */
-    protected $table = 'api_users';
+    protected $table = 'borrower';
 
     protected $fillable = [
         'name', 'email','mobile', 'password',
@@ -41,8 +41,5 @@ class ApiUser extends Authenticatable
         'email_verified_at' => 'datetime',
     ];
 	
-	public function profiles_detail()
-    {
-       return $this->hasMany('App\ApiUserProfiles', 'user_id', 'id');
-    }
+	
 }

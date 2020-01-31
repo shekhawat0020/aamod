@@ -1,16 +1,9 @@
 @extends('admin/layouts/default')
 @section('title')
-<title>E-Mitra-Dashboard | Post</title>
+<title>Aamod-Borrower</title>
 @stop
 @section('inlinecss')
 
-@stop
-@section('breadcrum')
-<h1 class="page-title">Post List</h1>
-<ol class="breadcrumb">
-    <li class="breadcrumb-item"><a href="#">Post</a></li>
-    <li class="breadcrumb-item active" aria-current="page">List</li>
-</ol>
 @stop
 @section('content')
 <div class="app-content">
@@ -25,19 +18,21 @@
             <div class="row">
                 <div class="card">
                     <div class="card-header">
-                        <h3 class="card-title">Post</h3>
+                        <h3 class="card-title">Borrower</h3>
                         <div class="ml-auto pageheader-btn">
-								<a href="{{route('post-create')}}" class="btn btn-success btn-icon text-white mr-2">
+                        
+                            @can('User Create')
+								<a href="{{URL::to('borrower/create')}}" class="btn btn-success btn-icon text-white mr-2">
 									<span>
 										<i class="fe fe-plus"></i>
-									</span> Add Post
-                                </a>
-                                
+									</span> Add Borrower
+								</a>
 								<a href="#" class="btn btn-danger btn-icon text-white">
 									<span>
 										<i class="fe fe-log-in"></i>
 									</span> Export
-								</a>
+                                </a>
+                            @endcan
 							</div>
                     </div>
                     <div class="card-body ">
@@ -46,10 +41,11 @@
                       <thead>
                           <tr>
                               <th>No</th>
-                              <th>Title</th>
-                              <th>Created_at</th>
-                              <!-- <th>Email</th> -->
-                              <th width="150px">Action</th>
+                              <th>Name</th>
+                              <th>Email</th>
+                              <th>Mobile</th>
+                              <th>Status</th>
+                              <th width="100px">Action</th>
                           </tr>
                       </thead>
                       <tbody>
@@ -62,27 +58,30 @@
         </div>
         <!-- ROW-1 CLOSED -->
     </div>
+
     <!-- View MODAL -->
-        <div class="modal fade" id="viewDetail" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLongTitle">Details</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                    
-                </div>
+<div class="modal fade" id="viewDetail" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
+	<div class="modal-dialog" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title" id="exampleModalLongTitle">Details</h5>
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+					<span aria-hidden="true">&times;</span>
+				</button>
+			</div>
+			<div class="modal-body">
+			
             </div>
-        </div>
-    </div>
-    <!-- View CLOSED -->
+			<div class="modal-footer">
+				<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+				
+			</div>
+		</div>
+	</div>
+</div>
+<!-- View CLOSED -->
+
+
 
 </div>
 @stop
@@ -99,11 +98,13 @@
             var table = $('.data-table').DataTable({
                 processing: true,
                 serverSide: true,
-                ajax: "{{ route('post-list') }}",
+                ajax: "{{ route('borrower-list') }}",
                 columns: [
                     {data: 'DT_RowIndex', name: 'DT_RowIndex'},
-                    {data: 'title', name: 'title'},
-                    {data: 'created_at', name: 'created_at'},                    
+                    {data: 'name', name: 'name'},
+                    {data: 'email', name: 'email'},
+                    {data: 'mobile_no', name: 'mobile_no', orderable: false, searchable: false},
+                    {data: 'status', name: 'status', orderable: false, searchable: false},                    
                     {data: 'action', name: 'action', orderable: false, searchable: false},
                 ]
             });
@@ -117,20 +118,6 @@
                     type: 'GET',
                     success: function(data){
                         $('#viewDetail').find('.modal-body').html(data);
-                    }
-                });
-            });
-			
-			$(document).on('click','.deleteButton', function(){
-				row = $(this).closest('tr');
-                url = $(this).attr('data-url');
-				var $this = $(this);
-				buttonLoading('loading', $this);
-                $.ajax({
-                    url: url,
-                    type: 'GET',
-                    success: function(data){
-						row.remove();
                     }
                 });
             });

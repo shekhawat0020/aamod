@@ -37,54 +37,31 @@ Route::group(['middleware' => ['auth'], 'namespace' => 'Backend'], function() {
         Route::post('/users/update/{id}', 'UserController@update')->name('user-update')->middleware(['permission:User Edit']);
         Route::get('/ajax/users/view/{id}', 'UserController@show')->name('user-view')->middleware(['permission:User View']);
     });
+	
+	//Borrower Master
+    Route::group(['middleware' => ['permission:Borrower Master']], function() {
+        Route::get('/borrower', 'BorrowerController@index')->name('borrower-list')->middleware(['permission:Borrower List']);
+        Route::get('/borrower/create', 'BorrowerController@create')->name('borrower-create')->middleware(['permission:Borrower Create']);
+        Route::post('/borrower/store', 'BorrowerController@store')->name('borrower-save')->middleware(['permission:Borrower Create']);
+        Route::get('/borrower/edit/{id}', 'BorrowerController@edit')->name('borrower-edit')->middleware(['permission:Borrower Edit']);
+        Route::post('/borrower/update/{id}', 'BorrowerController@update')->name('borrower-update')->middleware(['permission:Borrower Edit']);
+        Route::get('/ajax/borrower/view/{id}', 'BorrowerController@show')->name('borrower-view')->middleware(['permission:Borrower View']);
+    });
+	
+	//Loan Type Master
+    Route::group(['middleware' => ['permission:Loan Type Master']], function() {
+        Route::get('/loan-type', 'LoanTypeController@index')->name('loan-type-list')->middleware(['permission:Loan Type  List']);
+        Route::get('/loan-type/create', 'LoanTypeController@create')->name('loan-type-create')->middleware(['permission:Loan Type  Create']);
+        Route::post('/loan-type/store', 'LoanTypeController@store')->name('loan-type-save')->middleware(['permission:Loan Type  Create']);
+        Route::get('/loan-type/edit/{id}', 'LoanTypeController@edit')->name('loan-type-edit')->middleware(['permission:Loan Type  Edit']);
+        Route::post('/loan-type/update/{id}', 'LoanTypeController@update')->name('loan-type-update')->middleware(['permission:Loan Type  Edit']);
+        Route::get('/ajax/loan-type/view/{id}', 'LoanTypeController@show')->name('loan-type-view')->middleware(['permission:Loan Type  View']);
+    });
 
-	Route::get('/post-list', 'PostController@index')->name('post-list');
-    Route::get('/post/create', 'PostController@create')->name('post-create');
-    Route::post('/post/store', 'PostController@store')->name('post-store');
-    Route::get('/post/edit/{id}', 'PostController@edit')->name('post-edit');
-    Route::post('/post/update/{id}', 'PostController@update')->name('post-update');
-    Route::get('/post/delete/{id}', 'PostController@destroy')->name('post-delete');
-    Route::get('/ajax/post/view/{id}', 'PostController@show')->name('post-view');
-	
-	
-	Route::get('/news-list', 'NewsController@index')->name('news-list');
-    Route::get('/news/create', 'NewsController@create')->name('news-create');
-    Route::post('/news/store', 'NewsController@store')->name('news-store');
-    Route::get('/news/edit/{id}', 'NewsController@edit')->name('news-edit');
-    Route::post('/news/update/{id}', 'NewsController@update')->name('news-update');
-    Route::get('/news/delete/{id}', 'NewsController@destroy')->name('news-delete');
-    Route::get('/ajax/news/view/{id}', 'NewsController@show')->name('news-view');
-	
-	
-	Route::get('/banner-list', 'BannerController@index')->name('banner-list');
-    Route::get('/banner/create', 'BannerController@create')->name('banner-create');
-    Route::post('/banner/store', 'BannerController@store')->name('banner-store');
-    Route::get('/banner/edit/{id}', 'BannerController@edit')->name('banner-edit');
-    Route::post('/banner/update/{id}', 'BannerController@update')->name('banner-update');
-    Route::get('/banner/delete/{id}', 'BannerController@destroy')->name('banner-delete');
 	
 	
 	
-	Route::get('/user-apply-list', 'JobApplicationController@index')->name('user-apply-list');
-	Route::get('/user-apply-view/{job_id}', 'JobApplicationController@show')->name('user-apply-view');
-	Route::get('/user-apply-detail/{job_id}', 'JobApplicationController@detail')->name('user-apply-detail');
-	Route::post('/user-job-assign', 'JobApplicationController@assignTo')->name('assign-job');
-	Route::post('/user-job-status-update/{job_id}', 'JobApplicationController@updateStatus')->name('user-job-status-update');
-	Route::post('/user-job-message/{job_id}', 'JobApplicationController@sendMessage')->name('user-job-message');
-	Route::post('/ajax/user-job-message-get/{jobapply_id}/{lastid}', 'JobApplicationController@getMessage')->name('user-job-message-get');
 	
-	Route::get('/mobile-users-list', 'MobileUsersController@index')->name('mobile-users-list');
-    Route::get('/ajax/mobile-users/view/{id}', 'MobileUsersController@show')->name('mobile-users-view');
-	
-	
-    Route::get('/contact/list', 'ContactController@index')->name('user-contact-list');
-	
-	Route::get('/mobile-notification-list', 'MobileNotificationController@index')->name('mobile-notification-list');
-    Route::get('/mobile-notification/create', 'MobileNotificationController@create')->name('mobile-notification-create');
-    Route::post('/mobile-notification/store', 'MobileNotificationController@store')->name('mobile-notification-store');
-    Route::get('/mobile-notification/edit/{id}', 'MobileNotificationController@edit')->name('mobile-notification-edit');
-    Route::post('/mobile-notification/update/{id}', 'MobileNotificationController@update')->name('mobile-notification-update');
-    Route::get('/mobile-notification/delete/{id}', 'MobileNotificationController@destroy')->name('mobile-notification-delete');
 
     
     Route::get('/setting', 'SettingController@index')->name('setting');
