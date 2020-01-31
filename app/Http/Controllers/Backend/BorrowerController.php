@@ -166,12 +166,12 @@ class BorrowerController extends Controller
             'email' => 'required|email|unique:borrower,email,'.$id,
             'mobile_no' => 'required|min:10|unique:borrower,mobile_no,'.$id,
             'profile_image' => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048',
-            'pin_code' => 'numeric|min:6',
+            'pin_code' => 'sometimes|nullable|numeric|min:6',
             'address' => '',
-            'father_name' => 'regex:/^[\pL\s\-]+$/u',
-            'dob' => 'required|date_format:Y-m-d',
-            'gender' => 'in:Other,Male,Female',
-            'aadhar_number' => 'numeric|min:12',
+            'father_name' => 'sometimes|nullable|regex:/^[\pL\s\-]+$/u',
+            'dob' => 'sometimes|nullable|date_format:Y-m-d',
+            'gender' => 'sometimes|nullable|in:Other,Male,Female',
+            'aadhar_number' => 'sometimes|nullable|numeric|min:12',
             'pan_number' => '',
             'status' => 'required'
         ]);
