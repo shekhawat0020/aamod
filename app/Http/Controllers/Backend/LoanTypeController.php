@@ -68,7 +68,7 @@ class LoanTypeController extends Controller
     {
         
         $validator = Validator::make($request->all(), [
-            'title' => 'required|min:10|unique:loantype,title',
+            'title' => 'required|unique:loantype,title',
             'status' => 'required'
         ]);
 
@@ -132,7 +132,7 @@ class LoanTypeController extends Controller
 
 
         $validator = Validator::make($request->all(), [
-            'title' => 'required|min:10|unique:loantype,title,'.$id,
+            'title' => 'required|unique:loantype,title,'.$id,
             'status' => 'required'
         ]);
 
