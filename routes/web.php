@@ -50,14 +50,43 @@ Route::group(['middleware' => ['auth'], 'namespace' => 'Backend'], function() {
 	
 	//Loan Type Master
     Route::group(['middleware' => ['permission:Loan Type Master']], function() {
-        Route::get('/loan-type', 'LoanTypeController@index')->name('loan-type-list')->middleware(['permission:Loan Type  List']);
-        Route::get('/loan-type/create', 'LoanTypeController@create')->name('loan-type-create')->middleware(['permission:Loan Type  Create']);
-        Route::post('/loan-type/store', 'LoanTypeController@store')->name('loan-type-save')->middleware(['permission:Loan Type  Create']);
-        Route::get('/loan-type/edit/{id}', 'LoanTypeController@edit')->name('loan-type-edit')->middleware(['permission:Loan Type  Edit']);
-        Route::post('/loan-type/update/{id}', 'LoanTypeController@update')->name('loan-type-update')->middleware(['permission:Loan Type  Edit']);
-        Route::get('/ajax/loan-type/view/{id}', 'LoanTypeController@show')->name('loan-type-view')->middleware(['permission:Loan Type  View']);
+        Route::get('/loan-type', 'LoanTypeController@index')->name('loan-type-list')->middleware(['permission:Loan Type List']);
+        Route::get('/loan-type/create', 'LoanTypeController@create')->name('loan-type-create')->middleware(['permission:Loan Type Create']);
+        Route::post('/loan-type/store', 'LoanTypeController@store')->name('loan-type-save')->middleware(['permission:Loan Type Create']);
+        Route::get('/loan-type/edit/{id}', 'LoanTypeController@edit')->name('loan-type-edit')->middleware(['permission:Loan Type Edit']);
+        Route::post('/loan-type/update/{id}', 'LoanTypeController@update')->name('loan-type-update')->middleware(['permission:Loan Type Edit']);
+        Route::get('/ajax/loan-type/view/{id}', 'LoanTypeController@show')->name('loan-type-view')->middleware(['permission:Loan Type View']);
+    });
+	
+	//Document Master
+    Route::group(['middleware' => ['permission:Document Master']], function() {
+        Route::get('/document-field', 'DocumentFieldController@index')->name('document-field-list')->middleware(['permission:Document Field List']);
+        Route::get('/document-field/create', 'DocumentFieldController@create')->name('document-field-create')->middleware(['permission:Document Field Create']);
+        Route::post('/document-field/store', 'DocumentFieldController@store')->name('document-field-save')->middleware(['permission:Document Field Create']);
+        Route::get('/document-field/edit/{id}', 'DocumentFieldController@edit')->name('document-field-edit')->middleware(['permission:Document Field Edit']);
+        Route::post('/document-field/update/{id}', 'DocumentFieldController@update')->name('document-field-update')->middleware(['permission:Document Field Edit']);
+        Route::get('/ajax/document-field/view/{id}', 'DocumentFieldController@show')->name('document-field-view')->middleware(['permission:Document Field View']);
+    });
+	
+	//Document Master
+    Route::group(['middleware' => ['permission:Document Master']], function() {
+        Route::get('/document-group', 'DocumentGroupController@index')->name('document-group-list')->middleware(['permission:Document Group List']);
+        Route::get('/document-group/create', 'DocumentGroupController@create')->name('document-group-create')->middleware(['permission:Document Group Create']);
+        Route::post('/document-group/store', 'DocumentGroupController@store')->name('document-group-save')->middleware(['permission:Document Group Create']);
+        Route::get('/document-group/edit/{id}', 'DocumentGroupController@edit')->name('document-group-edit')->middleware(['permission:Document Group Edit']);
+        Route::post('/document-group/update/{id}', 'DocumentGroupController@update')->name('document-group-update')->middleware(['permission:Document Group Edit']);
+        Route::get('/ajax/document-group/view/{id}', 'DocumentGroupController@show')->name('document-group-view')->middleware(['permission:Document Group View']);
     });
 
+	//Document Master
+    Route::group(['middleware' => ['permission:Document Master']], function() {
+        Route::get('/document-set', 'DocumentSetController@index')->name('document-set-list')->middleware(['permission:Document Set List']);
+        Route::get('/document-set/create', 'DocumentSetController@create')->name('document-set-create')->middleware(['permission:Document Set Create']);
+        Route::post('/document-set/store', 'DocumentSetController@store')->name('document-set-save')->middleware(['permission:Document Set Create']);
+        Route::get('/document-set/edit/{id}', 'DocumentSetController@edit')->name('document-set-edit')->middleware(['permission:Document Set Edit']);
+        Route::post('/document-set/update/{id}', 'DocumentSetController@update')->name('document-set-update')->middleware(['permission:Document Set  Edit']);
+        Route::get('/ajax/document-set/view/{id}', 'DocumentSetController@show')->name('document-set-view')->middleware(['permission:Document Set View']);
+    });
 	
 	
 	

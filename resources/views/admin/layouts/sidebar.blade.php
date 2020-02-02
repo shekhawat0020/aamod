@@ -117,6 +117,44 @@
         </li>
     @endcan
 	
+	@can('Document Master')
+        <li class="slide">
+            <a class="side-menu__item" data-toggle="slide" href="#"><i class="side-menu__icon ti-user"></i><span class="side-menu__label">Document</span><i class="angle fa fa-angle-right"></i></a>
+            <ul class="slide-menu">
+            @can('Document Field List')
+                <li>
+                    <a href="{{ route('document-field-list') }}" class="slide-item">Document Field List<a>
+                </li>
+            @endcan
+            @can('Document Field Create')
+                <li>
+                    <a href="{{ route('document-field-create') }}" class="slide-item">Document Field Create<a>
+                </li>
+            @endcan
+			@can('Document Group List')
+                <li>
+                    <a href="{{ route('document-group-list') }}" class="slide-item">Document Group List<a>
+                </li>
+            @endcan
+            @can('Document Group Create')
+                <li>
+                    <a href="{{ route('document-group-create') }}" class="slide-item">Document Group Create<a>
+                </li>
+            @endcan
+			@can('Document Set List')
+                <li>
+                    <a href="{{ route('document-set-list') }}" class="slide-item">Document Set List<a>
+                </li>
+            @endcan
+            @can('Document Set Create')
+                <li>
+                    <a href="{{ route('document-set-create') }}" class="slide-item">Document Set Create<a>
+                </li>
+            @endcan
+            </ul>
+        </li>
+    @endcan
+	
 	
 	
 		
