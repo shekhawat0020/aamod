@@ -1,17 +1,16 @@
 @extends('admin/layouts/default')
 @section('title')
-<title>Create Loan Type</title>
+<title>Create Loan Field</title>
 @stop
 
 @section('inlinecss')
-<link type="text/css" rel="stylesheet" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.10/themes/ui-lightness/jquery-ui.css" />
-<link href="{{ asset('admin/assets/multiselectbox/css/ui.multiselect.css') }}" rel="stylesheet">
+<link href="{{ asset('admin/assets/multiselectbox/css/multi-select.css') }}" rel="stylesheet">
 @stop
 
 @section('breadcrum')
-<h1 class="page-title">Create Loan Type</h1>
+<h1 class="page-title">Create Loan Field</h1>
 <ol class="breadcrumb">
-    <li class="breadcrumb-item"><a href="#">Loan Type</a></li>
+    <li class="breadcrumb-item"><a href="#">Loan Field</a></li>
     <li class="breadcrumb-item active" aria-current="page">Create</li>
 </ol>
 @stop
@@ -25,13 +24,13 @@
         <!-- PAGE-HEADER END -->
 
         <!--  Start Content -->
-    <form id="submitForm" class="row"  method="post" action="{{route('loan-type-save')}}">
+    <form id="submitForm" class="row"  method="post" action="{{route('loan-field-save')}}">
         {{csrf_field()}}
         <!-- COL END -->
 							<div class="col-lg-6">
 								<div class="card">
 									<div class="card-header">
-										<h3 class="card-title">Loan Type Forms</h3>
+										<h3 class="card-title">Loan Field Forms</h3>
 									</div>
 									<div class="card-body">
                                     
@@ -39,14 +38,33 @@
 											<label class="form-label">Title *</label>
 											<input type="text" class="form-control" name="title" id="title" placeholder="Title..">
 										</div>
+										
 										<div class="form-group">
-											<label class="form-label">Fields *</label>
-											<select name="loan_fields[]" id="loan_fields" multiple="multiple" class="multi-select form-control">
-												
-                                                @foreach($fields as $field)
-                                                <option value="{{$field->id}}">{{$field->title}}</option>
-                                                @endforeach
+											<label class="form-label">Field Required *</label>
+											<select name="field_required" id="field_required" class="form-control custom-select">
+												<option value="1">Yes</option>
+												<option value="0">No</option>
 											</select>
+										</div>
+										
+										<div class="form-group">
+											<label class="form-label">Field Type *</label>
+											<select name="field_type" id="field_type" class="form-control custom-select">
+												
+												<option value="">Select Field Type</option>
+												<option value="Text">Text</option>
+												<option value="Numeric">Numeric</option>
+												<option value="Select">Select</option>
+												<option value="Textarea">Textarea</option>
+												
+											</select>
+										</div>
+										<div class="form-group option-list" style="display:none">
+										<div class="input-group" data-duplicate="input-option">
+											<input type="text" class="form-control" name="options_value[]" id="options_value" placeholder="Option..">
+											<span class="input-group-append"><button class="btn btn-primary" type="button" data-duplicate-add="input-option">+</button></span>
+											<span class="input-group-append"><button class="btn btn-primary" type="button" data-duplicate-remove="input-option">-</button></span>
+										</div>
 										</div>
 
                                         
@@ -77,7 +95,9 @@
 
 @stop
 @section('inlinejs')
-<script type="text/javascript">
+<script src="{{ asset('admin/assets/multiselectbox/js/jquery.multi-select.js') }}"></script> 
+<script src="{{ asset('admin/assets/js/jquery.duplicate.js') }}"></script>              
+    <script type="text/javascript">
         
         $(function () { 
            $('#submitForm').submit(function(){
@@ -94,8 +114,8 @@
                 data: new FormData($('#submitForm')[0]),
                 success: function(data) {
                     if(data.status){
-						var btn = '<a href="{{route('loan-type-list')}}" class="btn btn-info btn-sm">GoTo List</a>';
-                        successMsg('Create Loan Type', data.msg, btn);
+						var btn = '<a href="{{route('loan-field-list')}}" class="btn btn-info btn-sm">GoTo List</a>';
+                        successMsg('Create Loan Field', data.msg, btn);
                         $('#submitForm')[0].reset();
 
                     }else{
@@ -106,13 +126,13 @@
                                errorDiv.append('<div class="invalid-feedback">'+msg+'</div>');
                             });
                         });
-                        errorMsg('Create Loan Type','Input error');
+                        errorMsg('Create Loan Field','Input error');
                     }
                     buttonLoading('reset', $this);
                     
                 },
                 error: function() {
-                    errorMsg('Create Loan Type', 'There has been an error, please alert us immediately');
+                    errorMsg('Create Loan Field', 'There has been an error, please alert us immediately');
                     buttonLoading('reset', $this);
                 }
 
@@ -120,21 +140,18 @@
 
             return false;
            });
+		   
+		   $('#field_type').change(function(){
+			   fieldType = $(this).val();
+			   if(fieldType == 'Select'){
+				   $('.option-list').show();
+			   }else{
+				   $('.option-list').hide();
+			   }
+		   });
 
            });
             
        
     </script>
-@stop	
-@section('bottomjs')
-
-<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.5.1/jquery.min.js"></script>
-<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.10/jquery-ui.min.js"></script>
-<script src="{{ asset('admin/assets/multiselectbox/js/ui.multiselect.js') }}"></script>   
-<script>
-
-$(function () { 
-            $('#loan_fields').multiselect();
-});			
-  </script> 
 @stop

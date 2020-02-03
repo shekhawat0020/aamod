@@ -3,7 +3,6 @@ namespace App\Http\Controllers\Backend;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use App\LoanType;
 use App\LoanField;
 use Spatie\Permission\Models\Role;
 use DB;
@@ -12,7 +11,7 @@ use DataTables;
 use Validator;
 use Auth;
 
-class LoanTypeController extends Controller
+class LoanFieldController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -23,17 +22,17 @@ class LoanTypeController extends Controller
     {
 
         if ($request->ajax()) {
-            $data = LoanType::latest()->get();
+            $data = LoanField::latest()->get();
             return Datatables::of($data)
                     ->addIndexColumn()
                     ->addColumn('action', function($row){
                         $btn =' ';
-                        if(Auth()->user()->can('Loan Type Edit')){
-                            $btn .= '<a href="'.route("loan-type-edit", $row->id).'" class="edit btn btn-primary btn-sm">Edit</a>';
+                        if(Auth()->user()->can('Loan Field Edit')){
+                            $btn .= '<a href="'.route("loan-field-edit", $row->id).'" class="edit btn btn-primary btn-sm">Edit</a>';
                         }
 
-                        if(Auth()->user()->can('Loan Type View')){
-                        $btn .= ' <button type="button" data-url="'.route('loan-type-view', $row->id).'" class="edit btn btn-primary btn-sm viewDetail">View</a>';
+                        if(Auth()->user()->can('Loan Field View')){
+                        $btn .= ' <button type="button" data-url="'.route('loan-field-view', $row->id).'" class="edit btn btn-primary btn-sm viewDetail">View</a>';
                         }
                         return $btn;
                     })
@@ -44,7 +43,7 @@ class LoanTypeController extends Controller
                     ->make(true);
         }
       
-        return view('admin.loan-type.loan-type');
+        return view('admin.loan-field.loan-field');
     }
 
 
@@ -55,8 +54,7 @@ class LoanTypeController extends Controller
      */
     public function create()
     {
-		$fields = LoanField::where('status', 1)->get();
-        return view('admin.loan-type.loan-type-create',compact('fields'));
+        return view('admin.loan-field.loan-field-create',compact(''));
     }
 
 
@@ -70,8 +68,9 @@ class LoanTypeController extends Controller
     {
         
         $validator = Validator::make($request->all(), [
-            'title' => 'required|unique:loantype,title',
-            'loan_fields' => 'required',
+            'title' => 'required|unique:document_field,title',
+            'field_required' => 'required',
+            'field_type' => 'required',
             'status' => 'required'
         ]);
 
@@ -82,16 +81,18 @@ class LoanTypeController extends Controller
 			]);
         }
         
-        $loan = new LoanType();
-        $loan->title = $request->title;
-        $loan->loan_fields = json_encode($request->loan_fields);
-        $loan->status = $request->status;
-        $loan->save();
+        $document = new LoanField();
+        $document->title = $request->title;
+        $document->field_required = $request->field_required;
+        $document->field_type = $request->field_type;
+        $document->options_value = json_encode($request->options_value);
+        $document->status = $request->status;
+        $document->save();
 
 
         return response()->json([
             'status' => true,
-            'msg' => 'Loan Type created successfully'
+            'msg' => 'Loan Field created successfully'
 			]);
 
     }
@@ -105,8 +106,8 @@ class LoanTypeController extends Controller
      */
     public function show($id)
     {
-        $loan = LoanType::find($id);
-        return view('admin.loan-type.loan-type-show',compact('loan'));
+        $document = LoanField::find($id);
+        return view('admin.loan-field.loan-field-show',compact('document'));
     }
 
 
@@ -118,9 +119,9 @@ class LoanTypeController extends Controller
      */
     public function edit($id)
     {
-        $loan = LoanType::find($id);
-        $fields = LoanField::where('status', 1)->get();
-        return view('admin.loan-type.loan-type-edit',compact('loan', 'fields'));
+        $document = LoanField::find($id);
+        
+        return view('admin.loan-field.loan-field-edit',compact('document'));
     }
 
 
@@ -136,8 +137,9 @@ class LoanTypeController extends Controller
 
 
         $validator = Validator::make($request->all(), [
-            'title' => 'required|unique:loantype,title,'.$id,
-            'loan_fields' => 'required',
+            'title' => 'required|unique:document_field,title,'.$id,
+            'field_required' => 'required',
+            'field_type' => 'required',
             'status' => 'required'
         ]);
 
@@ -148,17 +150,19 @@ class LoanTypeController extends Controller
 			]);
         }
         
-        $loan = LoanType::find($id);
-        $loan->title = $request->title;
-        $loan->loan_fields = json_encode($request->loan_fields);
-        $loan->status = $request->status;
-        $loan->save();
+        $document = LoanField::find($id);
+        $document->title = $request->title;
+        $document->field_required = $request->field_required;
+        $document->field_type = $request->field_type;
+        $document->options_value = json_encode($request->options_value);
+        $document->status = $request->status;
+        $document->save();
 
         
 
         return response()->json([
             'status' => true,
-            'msg' => 'Loan Type updated successfully'
+            'msg' => 'Loan Field updated successfully'
 			]);
 
     }
@@ -172,7 +176,7 @@ class LoanTypeController extends Controller
      */
     public function destroy($id)
     {
-        LoanType::find($id)->delete();
+        LoanField::find($id)->delete();
     }
 
 

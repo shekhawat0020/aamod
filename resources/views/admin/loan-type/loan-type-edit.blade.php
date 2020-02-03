@@ -4,7 +4,8 @@
 @stop
 
 @section('inlinecss')
-<link href="{{ asset('admin/assets/multiselectbox/css/multi-select.css') }}" rel="stylesheet">
+<link type="text/css" rel="stylesheet" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.10/themes/ui-lightness/jquery-ui.css" />
+<link href="{{ asset('admin/assets/multiselectbox/css/ui.multiselect.css') }}" rel="stylesheet">
 @stop
 
 @section('breadcrum')
@@ -39,6 +40,15 @@
 											<input type="text" class="form-control" name="title" id="title" placeholder="Title.." value="{{$loan->title}}">
 										</div>
 
+										<div class="form-group">
+											<label class="form-label">Fields *</label>
+											<select name="loan_fields[]" id="loan_fields" multiple="multiple" class="multi-select form-control">
+												
+                                                @foreach($fields as $field)
+                                                <option @if(in_array($field->id,json_decode($loan->loan_fields))) selected @endif value="{{$field->id}}">{{$field->title}}</option>
+                                                @endforeach
+											</select>
+										</div>
                                         
 										
                                         <div class="form-group">
@@ -66,12 +76,10 @@
 </div>
 
 @stop
-@section('inlinejs')
-<script src="{{ asset('admin/assets/multiselectbox/js/jquery.multi-select.js') }}"></script>          
+@section('inlinejs')     
     <script type="text/javascript">
         
         $(function () { 
-            $('#roles').multiSelect();
            $('#submitForm').submit(function(){
             var $this = $('#submitButton');
             buttonLoading('loading', $this);
@@ -118,4 +126,20 @@
 		   
        
     </script>
+@stop	
+@section('bottomjs')
+
+<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.5.1/jquery.min.js"></script>
+<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.10/jquery-ui.min.js"></script>
+<script src="{{ asset('admin/assets/multiselectbox/js/ui.multiselect.js') }}"></script>   
+<script>
+
+$(function () { 
+  $('#loan_fields').multiselect();
+  $("ul.selected li").each(function(){
+		var selected_value = $(this).attr('data-selected-value');
+		//alert(selected_value);
+	});
+});			
+  </script> 
 @stop

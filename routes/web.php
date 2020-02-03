@@ -59,6 +59,16 @@ Route::group(['middleware' => ['auth'], 'namespace' => 'Backend'], function() {
     });
 	
 	//Document Master
+    Route::group(['middleware' => ['permission:Loan Type Master']], function() {
+            Route::get('/loan-field', 'LoanFieldController@index')->name('loan-field-list')->middleware(['permission:Loan Field List']);
+        Route::get('/loan-field/create', 'LoanFieldController@create')->name('loan-field-create')->middleware(['permission:Loan Field Create']);
+        Route::post('/loan-field/store', 'LoanFieldController@store')->name('loan-field-save')->middleware(['permission:Loan Field Create']);
+        Route::get('/loan-field/edit/{id}', 'LoanFieldController@edit')->name('loan-field-edit')->middleware(['permission:Loan Field Edit']);
+        Route::post('/loan-field/update/{id}', 'LoanFieldController@update')->name('loan-field-update')->middleware(['permission:Loan Field Edit']);
+        Route::get('/ajax/loan-field/view/{id}', 'LoanFieldController@show')->name('loan-field-view')->middleware(['permission:Loan Field View']);
+    });
+	
+	//Document Master
     Route::group(['middleware' => ['permission:Document Master']], function() {
         Route::get('/document-field', 'DocumentFieldController@index')->name('document-field-list')->middleware(['permission:Document Field List']);
         Route::get('/document-field/create', 'DocumentFieldController@create')->name('document-field-create')->middleware(['permission:Document Field Create']);

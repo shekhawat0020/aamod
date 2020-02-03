@@ -445,19 +445,20 @@
     <script src="{{ asset('admin/assets/plugins/sidemenu/sidemenu.js') }}"></script>
     <!--CUSTOM JS -->
     <script src="{{ asset('admin/assets/js/custom.js') }}"></script>
-    @yield('inlinejs')
-
+    
+	@yield('inlinejs')
     <script>
+	
     $('.select2-show-search').select2({
 		minimumResultsForSearch: ''
 	});
     function buttonLoading(processType, ele){
         if(processType == 'loading'){
             ele.html(ele.attr('data-loading-text'));
-            ele.prop('disabled', true);
+            ele.attr('disabled', true);
         }else{
             ele.html(ele.attr('data-rest-text'));
-            ele.prop('disabled', false);
+            ele.attr('disabled', false);
         }
     }
 
@@ -471,6 +472,7 @@
     }
     
     </script>
+	@yield('bottomjs')
 
 </body>
 

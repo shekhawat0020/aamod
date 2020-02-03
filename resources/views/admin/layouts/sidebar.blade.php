@@ -113,6 +113,17 @@
                     <a href="{{ route('loan-type-create') }}" class="slide-item">Create Loan Type<a>
                 </li>
             @endcan
+			
+			@can('Loan Field List')
+                <li>
+                    <a href="{{ route('loan-field-list') }}" class="slide-item">Loan Field List<a>
+                </li>
+            @endcan
+            @can('Loan Field Create')
+                <li>
+                    <a href="{{ route('loan-field-create') }}" class="slide-item">Create Field Type<a>
+                </li>
+            @endcan
             </ul>
         </li>
     @endcan
