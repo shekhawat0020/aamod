@@ -19929,3 +19929,6 @@ body.search-show:before, body.sidebar-show:before {
 .chat .msg_cotainer_send{
 	min-width:250px;
 }
+.connected-list{
+	height: 100px !important;
+}

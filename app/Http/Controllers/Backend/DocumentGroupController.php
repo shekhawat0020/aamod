@@ -122,7 +122,9 @@ class DocumentGroupController extends Controller
     public function edit($id)
     {
         $document = DocumentGroup::find($id);
-        $fields = DocumentField::where('status', 1)->get();
+        
+        $fieldId = implode(',',json_decode($document->document_fields));		
+        $fields = DocumentField::where('status', 1)->orderByRaw("FIELD(id, $fieldId)")->get();
         return view('admin.document-group.document-group-edit',compact('document', 'fields'));
     }
 
