@@ -27,11 +27,12 @@ Route::group([
     Route::post('/verify-login-otp', 'Auth\ApiAuthController@verifyLoginOtp');
     Route::post('/registor-for-login', 'Auth\ApiAuthController@registorForLogin');
 	
-	
+	//after login
+	Route::post('/loan-list', 'DataController@loanList');
     Route::group([
       'middleware' => 'auth:api'
     ], function() {
 		
-		Route::post('/loan-list', 'DataController@loanList');
+		
     });
 });
