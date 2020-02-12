@@ -56,8 +56,25 @@
 												<option @if($document->field_type == 'Numeric') selected @endif value="Numeric">Numeric</option>
 												<option @if($document->field_type == 'Select') selected @endif value="Select">Select</option>
 												<option @if($document->field_type == 'Textarea') selected @endif value="Textarea">Textarea</option>
+												<option @if($document->field_type == 'Date') selected @endif value="Date">Date</option>
+												<option @if($document->field_type == 'Mobile') selected @endif value="Mobile">Mobile</option>
+												<option @if($document->field_type == 'Email') selected @endif value="Email">Email</option>
+												<option @if($document->field_type == 'Credit Card') selected @endif value="Credit Card">Credit Card</option>
+												<option @if($document->field_type == 'Aadhar') selected @endif value="Aadhar">Aadhar</option>
+												<option @if($document->field_type == 'Pan') selected @endif value="Pan">Pan</option>
 												
 											</select>
+										</div>
+										<div class="form-group">
+											<label class="form-label">Conditional Type *</label>
+											<select name="conditional_type" id="conditional_type" class="form-control custom-select">
+												<option value="None">None</option>
+												<option value="Show Hide">Show Hide</option>
+											</select>
+										</div>
+										<div class="form-group condition_field" @if($document->condition_field != 'None') style="display:none" @endif>
+											<label class="form-label">Condition Field Name</label>
+											<input type="text" class="form-control" name="condition_field" id="condition_field" placeholder="">
 										</div>
 										<div class="form-group option-list" @if($document->field_type != 'Select') style="display:none" @endif>
 										@foreach(json_decode($document->options_value) as $option)
@@ -147,6 +164,15 @@
 				   $('.option-list').show();
 			   }else{
 				   $('.option-list').hide();
+			   }
+		   });
+		   $('#conditional_type').change(function(){
+			   fieldType = $(this).val();
+			   if(fieldType != 'None'){
+				   $('.condition_field').show();
+			   }else{
+				   $('.condition_field').hide();
+				   $('#condition_field').val("");
 			   }
 		   });
 

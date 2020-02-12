@@ -49,7 +49,7 @@
 										</div>
                                         <div class="form-group">
 											<label class="form-label">Profile Image </label>
-											<input type="file" class="form-control" name="profile_image" id="profile_image" placeholder="Mobile..">
+											<input type="file" class="form-control" name="profile_image" id="profile_image" placeholder="">
                                             <img id="profile_image_select" src="{{ asset(''.$user->profile_image) }}" style="width:100px">
 										</div>
 

@@ -23,13 +23,15 @@ Route::group([
     'prefix' => 'auth', 'namespace' => 'Api\Mobile'
 ], function () {
 	
-    
+    Route::post('/send-login-otp', 'Auth\ApiAuthController@sendLoginOtp');
+    Route::post('/verify-login-otp', 'Auth\ApiAuthController@verifyLoginOtp');
+    Route::post('/registor-for-login', 'Auth\ApiAuthController@registorForLogin');
 	
 	
     Route::group([
       'middleware' => 'auth:api'
     ], function() {
 		
-		
+		Route::post('/loan-list', 'DataController@loanList');
     });
 });

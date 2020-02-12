@@ -72,6 +72,8 @@ class LoanTypeController extends Controller
         $validator = Validator::make($request->all(), [
             'title' => 'required|unique:loantype,title',
             'loan_fields' => 'required',
+            'description' => 'required',
+            'icon' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
             'status' => 'required'
         ]);
 
@@ -81,11 +83,20 @@ class LoanTypeController extends Controller
 			'errors' => $validator->errors()
 			]);
         }
+		
+		$imageName = "";
+        if($request->hasFile('icon')){
+        $imageName = time().'.'.$request->icon->extension();   
+        $request->icon->move(public_path('uploads/icon'), $imageName);
+        $imageName = "uploads/icon/".$imageName;
+        }
         
         $loan = new LoanType();
         $loan->title = $request->title;
         $loan->loan_fields = json_encode($request->loan_fields);
         $loan->status = $request->status;
+        $loan->description = $request->description;
+        $loan->icon = $imageName;
         $loan->save();
 
 
@@ -140,6 +151,8 @@ class LoanTypeController extends Controller
         $validator = Validator::make($request->all(), [
             'title' => 'required|unique:loantype,title,'.$id,
             'loan_fields' => 'required',
+            'description' => 'required',
+            'icon' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
             'status' => 'required'
         ]);
 
@@ -149,11 +162,22 @@ class LoanTypeController extends Controller
 			'errors' => $validator->errors()
 			]);
         }
+		
+		$imageName = "";
+        if($request->hasFile('icon')){
+        $imageName = time().'.'.$request->icon->extension();   
+        $request->icon->move(public_path('uploads/icon'), $imageName);
+        $imageName = "uploads/icon/".$imageName;
+        }
         
         $loan = LoanType::find($id);
         $loan->title = $request->title;
         $loan->loan_fields = json_encode($request->loan_fields);
         $loan->status = $request->status;
+        $loan->description = $request->description;
+		if($imageName){
+        $loan->icon = $imageName;
+		}
         $loan->save();
 
         

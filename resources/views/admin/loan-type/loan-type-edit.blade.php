@@ -39,6 +39,16 @@
 											<label class="form-label">Title *</label>
 											<input type="text" class="form-control" name="title" id="title" placeholder="Title.." value="{{$loan->title}}">
 										</div>
+										
+										<div class="form-group">
+											<label class="form-label">Description *</label>
+											<input type="text" class="form-control" name="description" id="description" placeholder="" value="{{$loan->description}}">
+										</div>
+										<div class="form-group">
+											<label class="form-label">Icon *</label>
+											<input type="file" class="form-control" name="icon" id="icon" placeholder="">
+											<img id="icon_image_select" src="{{ asset(''.$loan->icon) }}" style="width:100px">
+										</div>
 
 										<div class="form-group">
 											<label class="form-label">Fields *</label>
@@ -122,7 +132,20 @@
            });
 
            });
-		   
+		   $("#icon").change(function(){
+                readURL(this);
+            });
+            function readURL(input) {
+                if (input.files && input.files[0]) {
+                    var reader = new FileReader();
+
+                    reader.onload = function (e) {
+                        $('#icon_image_select').attr('src', e.target.result);
+                    }
+
+                    reader.readAsDataURL(input.files[0]);
+                }
+            }
 		   
        
     </script>

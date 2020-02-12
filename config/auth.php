@@ -71,7 +71,7 @@ return [
         ],
         'api_user' => [
             'driver' => 'eloquent',
-            'model' => App\ApiUser::class,
+            'model' => App\Borrower::class,
         ],
 
         // 'users' => [

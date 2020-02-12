@@ -68,9 +68,11 @@ class LoanFieldController extends Controller
     {
         
         $validator = Validator::make($request->all(), [
-            'title' => 'required|unique:document_field,title',
+            'title' => 'required|unique:loan_field,title',
             'field_required' => 'required',
             'field_type' => 'required',
+            'conditional_type' => '',
+            'condition_field' => 'nullable|exists:loan_field,title',
             'status' => 'required'
         ]);
 
@@ -86,6 +88,8 @@ class LoanFieldController extends Controller
         $document->field_required = $request->field_required;
         $document->field_type = $request->field_type;
         $document->options_value = json_encode($request->options_value);
+        $document->condition_field = $request->condition_field;
+        $document->conditional_type = $request->conditional_type;
         $document->status = $request->status;
         $document->save();
 
@@ -137,9 +141,11 @@ class LoanFieldController extends Controller
 
 
         $validator = Validator::make($request->all(), [
-            'title' => 'required|unique:document_field,title,'.$id,
+            'title' => 'required|unique:loan_field,title,'.$id,
             'field_required' => 'required',
             'field_type' => 'required',
+            'conditional_type' => '',
+            'condition_field' => 'nullable|exists:loan_field,title',
             'status' => 'required'
         ]);
 
@@ -155,6 +161,8 @@ class LoanFieldController extends Controller
         $document->field_required = $request->field_required;
         $document->field_type = $request->field_type;
         $document->options_value = json_encode($request->options_value);
+        $document->condition_field = $request->condition_field;
+        $document->conditional_type = $request->conditional_type;
         $document->status = $request->status;
         $document->save();
 

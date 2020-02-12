@@ -56,8 +56,25 @@
 												<option value="Numeric">Numeric</option>
 												<option value="Select">Select</option>
 												<option value="Textarea">Textarea</option>
+												<option value="Date">Date</option>
+												<option value="Mobile">Mobile</option>
+												<option value="Email">Email</option>
+												<option value="Credit Card">Credit Card</option>
+												<option value="Aadhar">Aadhar</option>
+												<option value="Pan">Pan</option>
 												
 											</select>
+										</div>
+										<div class="form-group">
+											<label class="form-label">Conditional Type *</label>
+											<select name="conditional_type" id="conditional_type" class="form-control custom-select">
+												<option value="None">None</option>
+												<option value="Show Hide">Show Hide</option>
+											</select>
+										</div>
+										<div class="form-group condition_field" style="display:none">
+											<label class="form-label">Condition Field Name</label>
+											<input type="text" class="form-control" name="condition_field" id="condition_field" placeholder="">
 										</div>
 										<div class="form-group option-list" style="display:none">
 										<div class="input-group" data-duplicate="input-option">
@@ -147,6 +164,16 @@
 				   $('.option-list').show();
 			   }else{
 				   $('.option-list').hide();
+			   }
+		   });
+		   
+		   $('#conditional_type').change(function(){
+			   fieldType = $(this).val();
+			   if(fieldType != 'None'){
+				   $('.condition_field').show();
+			   }else{
+				   $('.condition_field').hide();
+				   $('#condition_field').val("");
 			   }
 		   });
 

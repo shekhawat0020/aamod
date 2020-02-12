@@ -2,8 +2,7 @@
 
 namespace App\Http\Controllers\Api\Mobile\Auth;
 
-use App\ApiUser;
-use App\ApiUserProfiles;
+use App\Borrower;
 use App\ForgotOtp;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -13,27 +12,88 @@ use Illuminate\Support\Facades\Hash;
 use Validator;
 class ApiAuthController extends Controller
 {
-    public function register(Request $request)
+    
+	
+	//send Login otp
+	public function sendLoginOtp(Request $request)
     {
-        $request->validate([
-            
-        ]);
-		
 		$validator = Validator::make($request->all(), [
-            'name' => 'required|string',
-            'mobile' => 'required|numeric|digits:10|unique:api_users',
-            'password' => 'required|confirmed|min:6',
-			'otp'  => 'required'
+            'mobile' => 'required|numeric|digits:10',
         ]);
-
-        if ($validator->fails()) {
+		if ($validator->fails()) {
 		   return response()->json([
 			'status' => false,
 			'errors' => $validator->errors()
 			]);
         }
 		
-		//verify otp
+		//send otp
+		$otp = rand(1000,9999); 
+        $this->sendSMS("Your OTP ".$otp." Please use for Login", $request->mobile);
+		
+		// forgot otp table also use for verify mobile
+		$saveotp = new ForgotOtp;
+		$saveotp->mobile = $request->mobile;
+		$saveotp->otp = $otp;
+		$saveotp->save();
+		
+		return response()->json([
+			'status' => true,
+			'msg' => 'Otp Send success'
+			]);
+		
+    }
+	
+	
+	public function registorForLogin(Request $request){
+		
+		$validator = Validator::make($request->all(), [
+            'mobile' => 'required|numeric|digits:10|exists:borrower,mobile_no',
+            'name' => 'required',
+            'email' => 'nullable|email|unique:borrower,email'
+        ]);
+		if ($validator->fails()) {
+		   return response()->json([
+			'status' => false,
+			'errors' => $validator->errors()
+			]);
+        }
+		
+		//update Borrower
+		$user = Borrower::where('mobile_no', $request->mobile)
+		->update(['name' => $request->name, 'email' => $request->email]); 
+
+		$user = Borrower::where("mobile_no",$request->mobile)->first();
+			$tokenResult = $user->createToken('Personal Access Token');
+				$token = $tokenResult->token;
+				$token->expires_at = Carbon::now()->addWeeks(12);
+				$token->save();
+				return response()->json([
+					'status' => true,
+					'type' => 'login',					
+					'user' => $user,
+					'access_token' => $tokenResult->accessToken,
+					'token_type' => 'Bearer',
+					'expires_at' => Carbon::parse(
+						$tokenResult->token->expires_at
+					)->toDateTimeString()
+				]);
+		
+		
+	}
+	
+	public function verifyLoginOtp(Request $request)
+    {
+		$validator = Validator::make($request->all(), [
+            'mobile' => 'required|numeric|digits:10|exists:forgot_otp,mobile',
+            'otp' => 'required'
+        ]);
+		if ($validator->fails()) {
+		   return response()->json([
+			'status' => false,
+			'errors' => $validator->errors()
+			]);
+        }
 		
 		$matchOtp = ForgotOtp::where('mobile', $request->mobile)->whereDate('created_at', Carbon::today())->where('otp', $request->otp)->first();
 		if(!$matchOtp){
@@ -47,73 +107,39 @@ class ApiAuthController extends Controller
 			ForgotOtp::where('mobile', $request->mobile)->delete();
 		}
 		
-		//end verify otp
-		
-		
-		
-        $user = new ApiUser;
-        $user->name = $request->name;
-        $user->mobile = $request->mobile;
-        $user->password = Hash::make($request->password);
-        $user->save();       
-		
-		return response()->json([
+		//if user not registor
+		$exist = Borrower::where('mobile_no', $request->mobile)->first();
+		if(!isset($exist->name)){
+			$borrower = new Borrower();
+			$borrower->mobile_no = $request->mobile;
+			$borrower->save();
+			
+			return response()->json([
 			'status' => true,
-			'message' => 'Successfully created user!'
+			'type' => 'registor',
+			'message' => 'Otp Verify'
 			]);
-    }
-	
-	
-	public function login(Request $request) {
-        
-		
-		$validator = Validator::make($request->all(), [
-            'mobile' => 'required',
-            'password' => 'required',
-        ]);
-
-        if ($validator->fails()) {
-		   return response()->json([
-			'status' => false,
-			'errors' => $validator->errors()
-			]);
-        }
-		
-        $credentials = request(['mobile', 'password']);
-        $user = ApiUser::where("mobile",$request->mobile)->first();
-       if($user){
-		   
-		   $profile = ApiUserProfiles::where('user_id', $user->id)->count();
-		   
-           if (Hash::check($request->password,$user->password)) {
-			   $tokenResult = $user->createToken('Personal Access Token');
+		}else{
+			$user = Borrower::where("mobile_no",$request->mobile)->first();
+			$tokenResult = $user->createToken('Personal Access Token');
 				$token = $tokenResult->token;
 				$token->expires_at = Carbon::now()->addWeeks(12);
 				$token->save();
 				return response()->json([
 					'status' => true,
+					'type' => 'login',					
 					'user' => $user,
-					'profiles' => $profile,
 					'access_token' => $tokenResult->accessToken,
 					'token_type' => 'Bearer',
 					'expires_at' => Carbon::parse(
 						$tokenResult->token->expires_at
 					)->toDateTimeString()
 				]);
-		   }else{
-            return response()->json([
-			'status' => false,
-			'errors' => ['error' => 'Wrong Password']
-			]);
 			
-		   }
-	   }else{
-		   return response()->json([
-			'status' => false,
-			'errors' => ['error' => 'Mobile no not exist']
-			]);
-	   }
-        
+		}
+		
+		  
+		
     }
 	
 	public function logout(Request $request)
@@ -124,11 +150,12 @@ class ApiAuthController extends Controller
         ]);
     }
 	
+	
 	//send forgot password otp
 	public function sendOtp(Request $request)
     {
 		$validator = Validator::make($request->all(), [
-            'mobile' => 'required|numeric|digits:10|exists:api_users',
+            'mobile' => 'required|numeric|digits:10',
         ]);
 		if ($validator->fails()) {
 		   return response()->json([
@@ -145,6 +172,9 @@ class ApiAuthController extends Controller
 		$saveotp->otp = $otp;
 		$saveotp->save();
 		
+		
+		
+		
 		return response()->json([
 			'status' => true,
 			'msg' => 'Otp Send success'
@@ -152,35 +182,6 @@ class ApiAuthController extends Controller
 		
     }
 	
-	//send forgot password otp
-	public function sendVerifyOtp(Request $request)
-    {
-		$validator = Validator::make($request->all(), [
-            'mobile' => 'required',
-        ]);
-		if ($validator->fails()) {
-		   return response()->json([
-			'status' => false,
-			'errors' => $validator->errors()
-			]);
-        }
-		
-		//send otp
-		$otp = rand(1000,9999); 
-        $this->sendSMS("Your OTP ".$otp." Please use for Registration", $request->mobile);
-		
-		// forgot otp table also use for verify mobile
-		$saveotp = new ForgotOtp;
-		$saveotp->mobile = $request->mobile;
-		$saveotp->otp = $otp;
-		$saveotp->save();
-		
-		return response()->json([
-			'status' => true,
-			'msg' => 'Otp Send success'
-			]);
-		
-    }
 	
 	public function passwordSet(Request $request)
     {

@@ -40,6 +40,14 @@
 											<input type="text" class="form-control" name="title" id="title" placeholder="Title..">
 										</div>
 										<div class="form-group">
+											<label class="form-label">Description *</label>
+											<input type="text" class="form-control" name="description" id="description" placeholder="">
+										</div>
+										<div class="form-group">
+											<label class="form-label">Icon *</label>
+											<input type="file" class="form-control" name="icon" id="icon" placeholder="">
+										</div>
+										<div class="form-group">
 											<label class="form-label">Fields *</label>
 											<select name="loan_fields[]" id="loan_fields" multiple="multiple" class="multi-select form-control">
 												
