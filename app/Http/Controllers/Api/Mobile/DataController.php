@@ -29,9 +29,9 @@ class DataController extends Controller
     {
 		$loanType = $request->loan_type;
 		
-		$loan_fields = LoanType::where('id', $loanType)->first()->loan_fields;
-		$loan_fields = json_decode($loan_fields);
-		$fields = LoanField::whereIn('id', $loan_fields)->get();
+		$loan_fields1 = LoanType::where('id', $loanType)->first()->loan_fields;
+		$loan_fields = json_decode($loan_fields1);
+		$fields = LoanField::whereIn('id', $loan_fields)->orderByRaw(DB::raw("FIELD(id, '$loan_fields1')"))->get();
 		
         return response()->json([
             'status' => true,
