@@ -38,7 +38,12 @@ class DataController extends Controller
 		$loan_fields1 = implode(',',$loan_fields);
 		
 		
-		$fields = LoanField::whereIn('id', $loan_fields)->orderByRaw(DB::raw("FIELD(id, '$loan_fields1') DESC"))->get();
+		$fields = LoanField::whereIn('id', $loan_fields)->get();
+		
+		 $fields = $fields->sortBy(function ($model) use ($loan_fields1) {
+			return array_search($model->id, $loan_fields1);
+		});
+		
 		
         return response()->json([
             'status' => true,
