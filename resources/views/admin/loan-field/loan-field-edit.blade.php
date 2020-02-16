@@ -76,6 +76,10 @@
 											<label class="form-label">Condition Field Name</label>
 											<input type="text" class="form-control" name="condition_field" id="condition_field" placeholder="">
 										</div>
+										<div class="form-group condition_value" @if($document->condition_field != 'None') style="display:none" @endif>
+											<label class="form-label">Condition Field Name</label>
+											<input type="text" class="form-control" name="condition_value" id="condition_value" placeholder="">
+										</div>
 										<div class="form-group option-list" @if($document->field_type != 'Select') style="display:none" @endif>
 										@foreach(json_decode($document->options_value) as $option)
 										<div class="input-group" data-duplicate="input-option">
@@ -170,9 +174,13 @@
 			   fieldType = $(this).val();
 			   if(fieldType != 'None'){
 				   $('.condition_field').show();
+				   $('.condition_value').show();
 			   }else{
 				   $('.condition_field').hide();
 				   $('#condition_field').val("");
+				   
+				   $('.condition_value').hide();
+				   $('#condition_value').val("");
 			   }
 		   });
 

@@ -76,6 +76,10 @@
 											<label class="form-label">Condition Field Name</label>
 											<input type="text" class="form-control" name="condition_field" id="condition_field" placeholder="">
 										</div>
+										<div class="form-group condition_value" style="display:none">
+											<label class="form-label">Condition Field Value</label>
+											<input type="text" class="form-control" name="condition_value" id="condition_value" placeholder="">
+										</div>
 										<div class="form-group option-list" style="display:none">
 										<div class="input-group" data-duplicate="input-option">
 											<input type="text" class="form-control" name="options_value[]" id="options_value" placeholder="Option..">
@@ -171,9 +175,13 @@
 			   fieldType = $(this).val();
 			   if(fieldType != 'None'){
 				   $('.condition_field').show();
+				   $('.condition_value').show();
 			   }else{
 				   $('.condition_field').hide();
 				   $('#condition_field').val("");
+				   
+				   $('.condition_value').hide();
+				   $('#condition_value').val("");
 			   }
 		   });
 
