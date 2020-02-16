@@ -72,7 +72,7 @@
 												<option @if($document->conditional_type == 'Show Hide') selected @endif value="Show Hide">Show Hide</option>
 											</select>
 										</div>
-										<div class="form-group condition_field" @if($document->conditional_type != 'None') style="display:none" @endif>
+										<div class="form-group condition_field" @if($document->conditional_type == 'None') style="display:none" @endif>
 											<label class="form-label">Condition Field Name</label>
 											<select class="form-control" name="condition_field" id="condition_field">
 											<option value=""> Select One</option>
@@ -81,7 +81,7 @@
 											@endforeach
 											</select>
 										</div>
-										<div class="form-group condition_value" @if($document->conditional_type != 'None') style="display:none" @endif>
+										<div class="form-group condition_value" @if($document->conditional_type == 'None') style="display:none" @endif>
 											<label class="form-label">Condition Field Name</label>
 											<input type="text" value="{{$document->condition_value}}" class="form-control" name="condition_value" id="condition_value" placeholder="">
 										</div>
