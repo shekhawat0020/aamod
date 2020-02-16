@@ -152,7 +152,7 @@ class LoanTypeController extends Controller
             'title' => 'required|unique:loantype,title,'.$id,
             'loan_fields' => 'required',
             'description' => 'required',
-            'icon' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'icon' => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048',
             'status' => 'required'
         ]);
 
