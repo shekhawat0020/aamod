@@ -23,7 +23,7 @@ class DataController extends Controller
 		$loans = LoanType::where('status', 1)->get();
         return response()->json([
             'status' => true,
-			'base_url' => URL::to('/'),
+			'base_url' => URL::to('/').'/',
             'data' => $loans
         ]);
     }
@@ -47,7 +47,6 @@ class DataController extends Controller
 		
         return response()->json([
             'status' => true,
-			'order' => $loan_fields1,
             'data' => $fields
         ]);
     }
