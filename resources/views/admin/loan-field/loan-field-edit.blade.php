@@ -77,7 +77,7 @@
 											<select class="form-control" name="condition_field" id="condition_field">
 											<option value=""> Select One</option>
 											@foreach($fields as $field)
-											<option @if($document->condition_field == '{{$field->title}}') selected @endif value="{{$field->title}}">{{$field->title}}</option>
+											<option @if($document->condition_field == $field->title) selected @endif value="{{$field->title}}">{{$field->title}}</option>
 											@endforeach
 											</select>
 										</div>
