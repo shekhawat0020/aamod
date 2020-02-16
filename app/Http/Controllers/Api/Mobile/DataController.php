@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Validator;
 use DB;
+use URL;
 class DataController extends Controller
 {
     
@@ -22,6 +23,7 @@ class DataController extends Controller
 		$loans = LoanType::where('status', 1)->get();
         return response()->json([
             'status' => true,
+			'base_url' => URL::to('/'),
             'data' => $loans
         ]);
     }
@@ -35,10 +37,12 @@ class DataController extends Controller
 		$loan_fields = json_decode($loan_fields);
 		$loan_fields1 = implode(',',$loan_fields);
 		
+		
 		$fields = LoanField::whereIn('id', $loan_fields)->orderByRaw(DB::raw("FIELD(id, '$loan_fields1') DESC"))->get();
 		
         return response()->json([
             'status' => true,
+			'order' => $loan_fields1,
             'data' => $fields
         ]);
     }
