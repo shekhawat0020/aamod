@@ -74,7 +74,12 @@
 										</div>
 										<div class="form-group condition_field" style="display:none">
 											<label class="form-label">Condition Field Name</label>
-											<input type="text" class="form-control" name="condition_field" id="condition_field" placeholder="">
+											<select class="form-control" name="condition_field" id="condition_field">
+											<option value=""> Select One</option>
+											@foreach($fields as $field)
+											<option value="{{$field->title}}">{{$field->title}}</option>
+											@endforeach
+											</select>
 										</div>
 										<div class="form-group condition_value" style="display:none">
 											<label class="form-label">Condition Field Value</label>

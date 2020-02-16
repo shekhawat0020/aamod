@@ -54,7 +54,8 @@ class LoanFieldController extends Controller
      */
     public function create()
     {
-        return view('admin.loan-field.loan-field-create',compact(''));
+		$fields = LoanField::where('status', 1)->get();
+        return view('admin.loan-field.loan-field-create',compact('fields'));
     }
 
 
@@ -89,6 +90,7 @@ class LoanFieldController extends Controller
         $document->field_type = $request->field_type;
         $document->options_value = json_encode($request->options_value);
         $document->condition_field = $request->condition_field;
+        $document->condition_value = $request->condition_value;
         $document->conditional_type = $request->conditional_type;
         $document->status = $request->status;
         $document->save();
@@ -124,8 +126,8 @@ class LoanFieldController extends Controller
     public function edit($id)
     {
         $document = LoanField::find($id);
-        
-        return view('admin.loan-field.loan-field-edit',compact('document'));
+        $fields = LoanField::where('status', 1)->get();
+        return view('admin.loan-field.loan-field-edit',compact('document', 'fields'));
     }
 
 
@@ -162,6 +164,7 @@ class LoanFieldController extends Controller
         $document->field_type = $request->field_type;
         $document->options_value = json_encode($request->options_value);
         $document->condition_field = $request->condition_field;
+        $document->condition_value = $request->condition_value;
         $document->conditional_type = $request->conditional_type;
         $document->status = $request->status;
         $document->save();

@@ -68,17 +68,22 @@
 										<div class="form-group">
 											<label class="form-label">Conditional Type *</label>
 											<select name="conditional_type" id="conditional_type" class="form-control custom-select">
-												<option value="None">None</option>
-												<option value="Show Hide">Show Hide</option>
+												<option @if($document->conditional_type == 'None') selected @endif value="None">None</option>
+												<option @if($document->conditional_type == 'Show Hide') selected @endif value="Show Hide">Show Hide</option>
 											</select>
 										</div>
-										<div class="form-group condition_field" @if($document->condition_field != 'None') style="display:none" @endif>
+										<div class="form-group condition_field" @if($document->conditional_type != 'None') style="display:none" @endif>
 											<label class="form-label">Condition Field Name</label>
-											<input type="text" class="form-control" name="condition_field" id="condition_field" placeholder="">
+											<select class="form-control" name="condition_field" id="condition_field">
+											<option value=""> Select One</option>
+											@foreach($fields as $field)
+											<option @if($document->condition_field == '{{$field->title}}') selected @endif value="{{$field->title}}">{{$field->title}}</option>
+											@endforeach
+											</select>
 										</div>
-										<div class="form-group condition_value" @if($document->condition_field != 'None') style="display:none" @endif>
+										<div class="form-group condition_value" @if($document->conditional_type != 'None') style="display:none" @endif>
 											<label class="form-label">Condition Field Name</label>
-											<input type="text" class="form-control" name="condition_value" id="condition_value" placeholder="">
+											<input type="text" value="{{$document->condition_value}}" class="form-control" name="condition_value" id="condition_value" placeholder="">
 										</div>
 										<div class="form-group option-list" @if($document->field_type != 'Select') style="display:none" @endif>
 										@foreach(json_decode($document->options_value) as $option)
