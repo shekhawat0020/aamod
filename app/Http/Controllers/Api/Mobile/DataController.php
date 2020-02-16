@@ -40,8 +40,8 @@ class DataController extends Controller
 		
 		$fields = LoanField::whereIn('id', $loan_fields)->get();
 		
-		 $fields = $fields->sortBy(function ($model) use ($loan_fields1) {
-			return array_search($model->id, $loan_fields1);
+		 $fields = $fields->sortBy(function ($model) use ($loan_fields) {
+			return array_search($model->id, $loan_fields);
 		});
 		
 		
