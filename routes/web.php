@@ -99,7 +99,15 @@ Route::group(['middleware' => ['auth'], 'namespace' => 'Backend'], function() {
     });
 	
 	
-	
+	//Loan Master
+    Route::group(['middleware' => ['permission:Loan Master']], function() {
+        Route::get('/loan', 'LoanController@index')->name('loan-list')->middleware(['permission:Loan List']);
+        Route::get('/loan/create/{loan_type_id}', 'LoanController@create')->name('loan-create')->middleware(['permission:Loan Create']);
+        Route::post('/loan/store', 'LoanController@store')->name('loan-save')->middleware(['permission:Loan Create']);
+        Route::get('/loan/edit/{id}', 'LoanController@edit')->name('loan-edit')->middleware(['permission:Loan Edit']);
+        Route::post('/loan/update/{id}', 'LoanController@update')->name('loan-update')->middleware(['permission:Loan Edit']);
+        Route::get('/ajax/loan/view/{id}', 'LoanController@show')->name('loan-view')->middleware(['permission:Loan View']);
+    });
 	
 
     
