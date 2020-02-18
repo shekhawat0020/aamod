@@ -37,42 +37,42 @@
                                     @foreach($fields as $field)
 									
 									@if($field->field_type == 'Text' || $field->field_type == 'Mobile' || $field->field_type == 'Credit Card' || $field->field_type == 'Aadhar' || $field->field_type == 'Pan')
-										<div class="form-group">
+										<div class="form-group @if($field->conditional_type != 'None') condtional-field @endif" @if($field->conditional_type != 'None')style="display:none" data-condition-field="{{preg_replace('/[^A-Za-z0-9\_]/', '', str_replace(' ', '_', $field->condition_field))}}" data-condition-value="{{$field->condition_value}}"@endif>
 											<label class="form-label">{{$field->title}} @if($field->field_required)* @endif</label>											
 											<input type="text" class="form-control" name="{{preg_replace('/[^A-Za-z0-9\_]/', '', str_replace(' ', '_', $field->title))}}" id="{{preg_replace('/[^A-Za-z0-9\_]/', '', str_replace(' ', '_', $field->title))}}" @if($field->field_required)required @endif>
 										</div>
 									@endif
 									
 									@if($field->field_type == 'Email')
-										<div class="form-group">
+										<div class="form-group @if($field->conditional_type != 'None') condtional-field @endif" @if($field->conditional_type != 'None')style="display:none" data-condition-field="{{preg_replace('/[^A-Za-z0-9\_]/', '', str_replace(' ', '_', $field->condition_field))}}" data-condition-value="{{$field->condition_value}}"@endif>
 											<label class="form-label">{{$field->title}} @if($field->field_required)* @endif</label>											
 											<input type="email" class="form-control" name="{{preg_replace('/[^A-Za-z0-9\_]/', '', str_replace(' ', '_', $field->title))}}" id="{{preg_replace('/[^A-Za-z0-9\_]/', '', str_replace(' ', '_', $field->title))}}" @if($field->field_required)required @endif>
 										</div>
 									@endif
 									
 									@if($field->field_type == 'Numeric')
-										<div class="form-group">
+										<div class="form-group @if($field->conditional_type != 'None') condtional-field @endif" @if($field->conditional_type != 'None')style="display:none" data-condition-field="{{preg_replace('/[^A-Za-z0-9\_]/', '', str_replace(' ', '_', $field->condition_field))}}" data-condition-value="{{$field->condition_value}}"@endif>
 											<label class="form-label">{{$field->title}} @if($field->field_required)* @endif</label>											
 											<input type="numeric" class="form-control" name="{{preg_replace('/[^A-Za-z0-9\_]/', '', str_replace(' ', '_', $field->title))}}" id="{{preg_replace('/[^A-Za-z0-9\_]/', '', str_replace(' ', '_', $field->title))}}" @if($field->field_required)required @endif>
 										</div>
 									@endif
 									
 									@if($field->field_type == 'Date')
-										<div class="form-group">
+										<div class="form-group @if($field->conditional_type != 'None') condtional-field @endif" @if($field->conditional_type != 'None')style="display:none" data-condition-field="{{preg_replace('/[^A-Za-z0-9\_]/', '', str_replace(' ', '_', $field->condition_field))}}" data-condition-value="{{$field->condition_value}}"@endif>
 											<label class="form-label">{{$field->title}} @if($field->field_required)* @endif</label>											
 											<input type="date" class="form-control" name="{{preg_replace('/[^A-Za-z0-9\_]/', '', str_replace(' ', '_', $field->title))}}" id="{{preg_replace('/[^A-Za-z0-9\_]/', '', str_replace(' ', '_', $field->title))}}" @if($field->field_required)required @endif>
 										</div>
 									@endif
 									
 									@if($field->field_type == 'Textarea')
-										<div class="form-group">
+										<div class="form-group @if($field->conditional_type != 'None') condtional-field @endif" @if($field->conditional_type != 'None')style="display:none" data-condition-field="{{preg_replace('/[^A-Za-z0-9\_]/', '', str_replace(' ', '_', $field->condition_field))}}" data-condition-value="{{$field->condition_value}}"@endif>
 											<label class="form-label">{{$field->title}} @if($field->field_required)* @endif</label>											
 											<textarea class="form-control" name="{{preg_replace('/[^A-Za-z0-9\_]/', '', str_replace(' ', '_', $field->title))}}" id="{{preg_replace('/[^A-Za-z0-9\_]/', '', str_replace(' ', '_', $field->title))}}" @if($field->field_required)required @endif></textarea>
 										</div>
 									@endif
 
 									@if($field->field_type == 'Select')
-										<div class="form-group">
+										<div class="form-group @if($field->conditional_type != 'None') condtional-field @endif" @if($field->conditional_type != 'None')style="display:none" data-condition-field="{{preg_replace('/[^A-Za-z0-9\_]/', '', str_replace(' ', '_', $field->condition_field))}}" data-condition-value="{{$field->condition_value}}"@endif>
 											<label class="form-label">{{$field->title}} @if($field->field_required)* @endif</label>											
 											<select class="form-control" name="{{preg_replace('/[^A-Za-z0-9\_]/', '', str_replace(' ', '_', $field->title))}}" id="{{preg_replace('/[^A-Za-z0-9\_]/', '', str_replace(' ', '_', $field->title))}}" @if($field->field_required)required @endif>
 												@php  $options =  json_decode($field->options_value)  @endphp
@@ -150,7 +150,27 @@
             return false;
            });
 
-           });
+          
+		$('.form-control').change(function(){
+			id = $(this).attr('id');
+			fieldvalue = $(this).val();
+			$('.condtional-field').each(function(key,obj){
+				if($(this).attr('data-condition-field') == id) {
+					
+					condtionValues = $(this).attr('data-condition-value');
+					condtionValues = condtionValues.split(',');	
+console.log(condtionValues);					
+					if(!$.inArray(fieldvalue,condtionValues)){
+						$(this).show();
+					}else{
+						$(this).hide();
+						$(this).find('.form-control').val("");					
+					}
+				}
+			});
+		});
+
+	    });
             
        
     </script>
