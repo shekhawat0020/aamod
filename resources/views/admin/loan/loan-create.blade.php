@@ -159,8 +159,8 @@
 					
 					condtionValues = $(this).attr('data-condition-value');
 					condtionValues = condtionValues.split(',');	
-console.log(condtionValues);					
-					if(!$.inArray(fieldvalue,condtionValues)){
+					console.log(condtionValues);					
+					if($.inArray(fieldvalue,condtionValues) != -1){
 						$(this).show();
 					}else{
 						$(this).hide();
