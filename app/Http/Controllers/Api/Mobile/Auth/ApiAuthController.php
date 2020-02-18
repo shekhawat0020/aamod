@@ -29,7 +29,8 @@ class ApiAuthController extends Controller
 		
 		//send otp
 		$otp = rand(1000,9999); 
-        $this->sendSMS("Your OTP ".$otp." Please use for Login", $request->mobile);
+		$signature = $request->signature;
+        $this->sendSMS("<#> Your OTP is: ".$otp." ".$signature, $request->mobile);
 		
 		// forgot otp table also use for verify mobile
 		$saveotp = new ForgotOtp;
@@ -100,7 +101,7 @@ class ApiAuthController extends Controller
 			
 			return response()->json([
 			'status' => false,
-			'errors' => ['otp'=> ['Wrong Otp.']]
+			'message' => 'Wrong Otp'
 			]);
 			
 		}else{
