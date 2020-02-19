@@ -27,6 +27,7 @@
         <!--  Start Content -->
     <form id="submitForm" class="row"  method="post" action="{{route('loan-save')}}">
         {{csrf_field()}}
+		<input type="hidden" name="loan_type" value="{{$loan_type_id}}">
         <!-- COL END -->
 							<div class="col-lg-6">
 								<div class="card">
@@ -34,6 +35,16 @@
 										<h3 class="card-title">Loan Form for {{$loanType->title}}</h3>
 									</div>
 									<div class="card-body">
+									
+									<div class="form-group">
+											<label class="form-label"> Apply for Borrower *</label>											
+											<select class="form-control select2" name="borrower" id="borrower" required>
+												<option value=""> Select Borrower </option>
+												@foreach($borrowers as $borrower)
+												<option value="{{$borrower->id}}">{{$borrower->name}}</option>
+												@endforeach
+											</select>
+										</div>
                                     @foreach($fields as $field)
 									
 									@if($field->field_type == 'Text' || $field->field_type == 'Mobile' || $field->field_type == 'Credit Card' || $field->field_type == 'Aadhar' || $field->field_type == 'Pan')
@@ -123,8 +134,8 @@
                 data: new FormData($('#submitForm')[0]),
                 success: function(data) {
                     if(data.status){
-						var btn = '<a href="{{route('loan-type-list')}}" class="btn btn-info btn-sm">GoTo List</a>';
-                        successMsg('Create Loan Type', data.msg, btn);
+						var btn = '<a href="{{route('loan-list')}}" class="btn btn-info btn-sm">GoTo List</a>';
+                        successMsg('Create Loan', data.msg, btn);
                         $('#submitForm')[0].reset();
 
                     }else{
@@ -135,7 +146,7 @@
                                errorDiv.append('<div class="invalid-feedback">'+msg+'</div>');
                             });
                         });
-                        errorMsg('Create Loan Type','Input error');
+                        errorMsg('Create Loan','Input error');
                     }
                     buttonLoading('reset', $this);
                     

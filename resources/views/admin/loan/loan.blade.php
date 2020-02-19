@@ -50,8 +50,10 @@
                       <thead>
                           <tr>
                               <th>No</th>
-                              <th>Title</th>
-                              <th>Status</th>
+                              <th>Borrower Name</th>
+                              <th>Mobile</th>
+                              <th>Loan Status</th>
+                              <th>Loan Type</th>
                               <th width="100px">Action</th>
                           </tr>
                       </thead>
@@ -108,8 +110,10 @@
                 ajax: "{{ route('loan-list') }}",
                 columns: [
                     {data: 'DT_RowIndex', name: 'DT_RowIndex'},
-                    {data: 'title', name: 'title'},
-                    {data: 'status', name: 'status', orderable: false, searchable: false},                    
+                    {data: 'borrower_detail.name', name: 'borrower_detail.name'},
+                    {data: 'borrower_detail.mobile_no', name: 'borrower_detail.mobile_no'},
+                    {data: 'loan_status', name: 'loan_status'},
+                    {data: 'loan_type_detail.title', name: 'loan_type_detail.title', orderable: false, searchable: false},                    
                     {data: 'action', name: 'action', orderable: false, searchable: false},
                 ]
             });

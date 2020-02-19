@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\LoanType;
 use App\Loan;
 use App\LoanField;
+use App\Borrower;
 use Spatie\Permission\Models\Role;
 use DB;
 use Hash;
@@ -24,7 +25,7 @@ class LoanController extends Controller
     {
 
         if ($request->ajax()) {
-            $data = Loan::latest()->get();
+            $data = Loan::with('borrower_detail')->with('loan_type_detail')->latest()->get();
             return Datatables::of($data)
                     ->addIndexColumn()
                     ->addColumn('action', function($row){
@@ -62,7 +63,8 @@ class LoanController extends Controller
 		$fields = $fields->sortBy(function ($model) use ($loanfields) {
 			return array_search($model->id, $loanfields);
 		});
-        return view('admin.loan.loan-create',compact('loanType','fields'));
+		$borrowers = Borrower::where('status', 1)->get();
+        return view('admin.loan.loan-create',compact('loanType','fields', 'borrowers', 'loan_type_id'));
     }
 
 
@@ -76,11 +78,8 @@ class LoanController extends Controller
     {
         
         $validator = Validator::make($request->all(), [
-            'title' => 'required|unique:loantype,title',
-            'loan_fields' => 'required',
-            'description' => 'required',
-            'icon' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
-            'status' => 'required'
+            'borrower' => 'required|exists:borrower,id',
+			'loan_type' => 'required|exists:loantype,id'
         ]);
 
         if ($validator->fails()) {
@@ -93,11 +92,8 @@ class LoanController extends Controller
 		
         
         $loan = new Loan();
-        $loan->title = $request->title;
-        $loan->loan_fields = json_encode($request->loan_fields);
-        $loan->status = $request->status;
-        $loan->description = $request->description;
-        $loan->icon = $imageName;
+        $loan->borrower_id = $request->borrower;
+        $loan->loan_type_id = $request->loan_type;
         $loan->save();
 
 

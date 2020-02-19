@@ -13,8 +13,17 @@ class Loan extends Model
      */
 	 protected $table = 'loan';
     protected $fillable = [
-        'title'
+        'borrower_id'
     ];
 	
+	public function borrower_detail()
+    {
+       return $this->hasOne('App\Borrower', 'id', 'borrower_id');
+    }
+	
+	public function loan_type_detail()
+    {
+       return $this->hasOne('App\LoanType', 'id', 'loan_type_id');
+    }
 	
 }
