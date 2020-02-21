@@ -58,6 +58,16 @@ Route::group(['middleware' => ['auth'], 'namespace' => 'Backend'], function() {
         Route::get('/ajax/loan-type/view/{id}', 'LoanTypeController@show')->name('loan-type-view')->middleware(['permission:Loan Type View']);
     });
 	
+	//Loan Type Status
+    Route::group(['middleware' => ['permission:Loan Status Master']], function() {
+        Route::get('/loan-status', 'LoanStatusController@index')->name('loan-status-list')->middleware(['permission:Loan Status List']);
+        Route::get('/loan-status/create', 'LoanStatusController@create')->name('loan-status-create')->middleware(['permission:Loan Status Create']);
+        Route::post('/loan-status/store', 'LoanStatusController@store')->name('loan-status-save')->middleware(['permission:Loan Status Create']);
+        Route::get('/loan-status/edit/{id}', 'LoanStatusController@edit')->name('loan-status-edit')->middleware(['permission:Loan Status Edit']);
+        Route::post('/loan-status/update/{id}', 'LoanStatusController@update')->name('loan-status-update')->middleware(['permission:Loan Status Edit']);
+        Route::get('/ajax/loan-status/view/{id}', 'LoanStatusController@show')->name('loan-status-view')->middleware(['permission:Loan Status View']);
+    });
+	
 	//Document Master
     Route::group(['middleware' => ['permission:Loan Type Master']], function() {
             Route::get('/loan-field', 'LoanFieldController@index')->name('loan-field-list')->middleware(['permission:Loan Field List']);

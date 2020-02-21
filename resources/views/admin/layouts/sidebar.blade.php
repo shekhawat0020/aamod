@@ -128,6 +128,24 @@
         </li>
     @endcan
 	
+	@can('Loan Status Master')
+        <li class="slide">
+            <a class="side-menu__item" data-toggle="slide" href="#"><i class="side-menu__icon ti-user"></i><span class="side-menu__label">Loan Status</span><i class="angle fa fa-angle-right"></i></a>
+            <ul class="slide-menu">
+            @can('Loan Status List')
+                <li>
+                    <a href="{{ route('loan-status-list') }}" class="slide-item">Loan Status List<a>
+                </li>
+            @endcan
+            @can('Loan Status Create')
+                <li>
+                    <a href="{{ route('loan-status-create') }}" class="slide-item">Create Loan Status<a>
+                </li>
+            @endcan
+            </ul>
+        </li>
+    @endcan
+	
 	@can('Document Master')
         <li class="slide">
             <a class="side-menu__item" data-toggle="slide" href="#"><i class="side-menu__icon ti-user"></i><span class="side-menu__label">Document</span><i class="angle fa fa-angle-right"></i></a>
