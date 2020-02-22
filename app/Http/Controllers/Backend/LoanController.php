@@ -6,6 +6,8 @@ use App\Http\Controllers\Controller;
 use App\LoanType;
 use App\Loan;
 use App\LoanField;
+use App\LoanStatus;
+use App\User;
 use App\Borrower;
 use Spatie\Permission\Models\Role;
 use DB;
@@ -25,7 +27,7 @@ class LoanController extends Controller
     {
 
         if ($request->ajax()) {
-            $data = Loan::with('borrower_detail')->with('loan_type_detail')->latest()->get();
+            $data = Loan::with('loan_status_detail')->with('assign_detail')->with('borrower_detail')->with('loan_type_detail')->latest()->get();
             return Datatables::of($data)
                     ->addIndexColumn()
                     ->addColumn('action', function($row){
@@ -35,14 +37,28 @@ class LoanController extends Controller
                         }
 
                         if(Auth()->user()->can('Loan View')){
-                        $btn .= ' <button type="button" data-url="'.route('loan-view', $row->id).'" class="edit btn btn-primary btn-sm viewDetail">View</a>';
+                        $btn .= ' <button type="button" data-url="'.route('loan-view', $row->id).'" class="edit btn btn-primary btn-sm viewDetail">View</button>';
+                        }
+						
+						if(Auth()->user()->can('Loan Assign')){
+                        $btn .= ' <button type="button" data-url="'.route('loan-assign-form', $row->id).'" class="edit btn btn-primary btn-sm assignDetail">Assign</button>';
                         }
                         return $btn;
                     })
+					->editColumn('loan_status_detail.title', function($row){
+						$btn =' ';
+                        if(Auth()->user()->can('Loan Update Status')){
+                            $btn .= ' <button type="button" data-url="'.route('loan-status-form', $row->id).'" class="btn btn-primary btn-sm statusDetail">'.$row->loan_status_detail->title.'</button>';
+                        }else{
+							$btn .= $row->loan_status_detail->title;
+						}
+						
+						return $btn;
+					})
                      ->addColumn('status',  function ($user) {
                         return ($user->status)?'Active':'InActive';
                      })
-                    ->rawColumns(['action'])
+                    ->rawColumns(['action', 'loan_status_detail.title'])
                     ->make(true);
         }
       $loanTypes = LoanType::where('status', 1)->get();
@@ -181,6 +197,86 @@ class LoanController extends Controller
 
     }
 
+	public function getStatusForm($loan_id){
+		$loan = Loan::find($loan_id);
+		$parent_status = LoanStatus::where('parent_id', 0)->get();
+		$sub_status = LoanStatus::where('parent_id', $loan->loan_status)->get();
+		return view('admin.loan.model.status-form',compact('parent_status', 'loan', 'sub_status'));
+		
+	}
+	
+	public function updateLoanStatus(Request $request){
+		
+		$validator = Validator::make($request->all(), [
+            'lona_id' => 'required|exists:loan,id',
+            'loan_status' => 'required',
+            'loan_sub_status' => 'required',
+            'internal_comment' => '',
+            'external_comment' => '',
+            'ps_loan_date' => 'required',
+        ]);
+
+        if ($validator->fails()) {
+		   return response()->json([
+			'status' => false,
+			'errors' => $validator->errors()
+			]);
+        }
+		
+		$loan = Loan::find($request->lona_id);
+		$loan->loan_status = $request->loan_status;
+		$loan->loan_sub_status = $request->loan_sub_status;
+		$loan->internal_comment = $request->internal_comment;
+		$loan->external_comment = $request->external_comment;
+		$loan->ps_loan_date = $request->ps_loan_date;
+		$loan->save(); 
+		return response()->json([
+            'status' => true,
+            'msg' => 'Status Updated'
+			]);
+		
+	}
+	
+	public function getSubStatus($parent_id){
+		
+		$sub_status = LoanStatus::where('parent_id', $parent_id)->get();
+		return response()->json([
+            'status' => true,
+            'data' => $sub_status
+			]);
+	}
+	
+	public function getAssignForm($loan_id){
+		$loan = Loan::find($loan_id);
+		$users = User::role('Emitra')->get();
+		return view('admin.loan.model.assign-form',compact('loan', 'users'));
+		
+	}
+	
+	public function updateLoanAssign(Request $request){
+		
+		$validator = Validator::make($request->all(), [
+            'lona_id' => 'required|exists:loan,id',
+            'assign_to' => 'required|exists:users,id',
+        ]);
+
+        if ($validator->fails()) {
+		   return response()->json([
+			'status' => false,
+			'errors' => $validator->errors()
+			]);
+        }
+		
+		$loan = Loan::find($request->lona_id);
+		$loan->assign_to = $request->assign_to;
+		$loan->save(); 
+		return response()->json([
+            'status' => true,
+            'msg' => 'Assign TO Updated'
+			]);
+		
+	}
+	
 
     /**
      * Remove the specified resource from storage.

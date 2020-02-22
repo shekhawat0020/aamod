@@ -81,6 +81,8 @@
 
 
 
+
+
 </div>
 @stop
 @section('inlinejs')
@@ -117,6 +119,8 @@
                     }
                 });
             });
+			
+			
             
         });
     </script>

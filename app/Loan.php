@@ -26,4 +26,14 @@ class Loan extends Model
        return $this->hasOne('App\LoanType', 'id', 'loan_type_id');
     }
 	
+	public function loan_status_detail()
+    {
+       return $this->hasOne('App\LoanStatus', 'id', 'loan_status');
+    }
+	
+	public function assign_detail()
+    {
+       return $this->hasOne('App\User', 'id', 'assign_to');
+    }
+	
 }

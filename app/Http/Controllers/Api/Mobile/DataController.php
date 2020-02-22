@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api\Mobile;
 use App\Borrower;
 use App\LoanField;
 use App\LoanType;
+use App\Loan;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
@@ -50,6 +51,33 @@ class DataController extends Controller
             'data' => $fields
         ]);
     }
+	
+	public function borrowerLoanFields(Request $request){
+		
+		$validator = Validator::make($request->all(), [
+            'borrower_id' => 'required|exists:borrower,id',
+        ]);
+
+        if ($validator->fails()) {
+		   return response()->json([
+			'status' => false,
+			'errors' => $validator->errors()
+			]);
+        }
+		
+		$loans = Loan::with('loan_status_detail')
+		->with('assign_detail')
+		->with('borrower_detail')
+		->with('loan_type_detail')
+		->latest()->get();
+		
+		return response()->json([
+            'status' => true,
+            'site_url' => URL::to('/').'/',
+            'data' => $loans
+        ]);
+		
+	}
 	
 	
 	

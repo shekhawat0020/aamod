@@ -22,4 +22,6 @@ class LoanStatus extends Model
     }
 	
 	
+	
+	
 }
