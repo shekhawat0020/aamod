@@ -91,30 +91,7 @@
 	</div>
 </div>
 <!-- View CLOSED -->
-    <!-- Status Update MODAL -->
-<div class="modal fade" id="statusDetail" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
-	<div class="modal-dialog" role="document">
-		<div class="modal-content">
-			<div class="modal-header">
-				<h5 class="modal-title" id="exampleModalLongTitle">Status Update</h5>
-				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-					<span aria-hidden="true">&times;</span>
-				</button>
-			</div>
-			<form  id="submitForm" action="{{route('update-loan-status')}}">
-			<div class="modal-body">
-			
-            </div>
-			<div class="modal-footer">
-				<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-				 <button type="submit" id="submitButton" class="btn btn-primary float-right"  data-loading-text="<i class='fa fa-spinner fa-spin '></i> Sending..." data-rest-text="Submit">Submit</button>
-				
-			</div>
-			</form>
-		</div>
-	</div>
-</div>
-<!-- Status Update CLOSED -->
+
 
     <!-- Status Update MODAL -->
 <div class="modal fade" id="assignDetail" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
@@ -163,7 +140,7 @@
                     {data: 'id', name: 'id'},
                     {data: 'borrower_detail.name', name: 'borrower_detail.name'},
                     {data: 'borrower_detail.mobile_no', name: 'borrower_detail.mobile_no'},
-                    {data: 'loan_status_detail.title', name: 'loan_status_detail.title'},
+                    {data: 'loan_status', name: 'loan_status'},
                     {data: 'assign_detail.name', name: 'assign_detail.name'},
                     {data: 'loan_type_detail.title', name: 'loan_type_detail.title', orderable: false, searchable: false},                    
                     {data: 'action', name: 'action', orderable: false, searchable: false},
@@ -183,18 +160,7 @@
                 });
             });
 			
-			$(document).on('click','.statusDetail', function(){
-                $('#statusDetail').modal('show');
-                url = $(this).attr('data-url');
-                $('#statusDetail').find('.modal-body').html('<p class="ploading"><i class="fa fa-spinner fa-spin"></i></p>')
-                $.ajax({
-                    url: url,
-                    type: 'GET',
-                    success: function(data){
-                        $('#statusDetail').find('.modal-body').html(data);
-                    }
-                });
-            });
+			
 			
 			$(document).on('click','.assignDetail', function(){
                 $('#assignDetail').modal('show');
@@ -209,50 +175,7 @@
                 });
             });
 			
-			$('#submitForm').submit(function(){
-            var $this = $('#submitButton');
-            buttonLoading('loading', $this);
-            $('.is-invalid').removeClass('is-invalid state-invalid');
-            $('.invalid-feedback').remove();
-            $.ajax({
-                url: $('#submitForm').attr('action'),
-                type: "POST",
-                processData: false,  // Important!
-                contentType: false,
-                cache: false,
-                data: new FormData($('#submitForm')[0]),
-                success: function(data) {
-                    if(data.status){
-						var btn = '<a href="{{route('loan-type-list')}}" class="btn btn-info btn-sm">GoTo List</a>';
-                        successMsg('Update Loan Status', data.msg, btn);
-						$('#statusDetail').modal('hide');
-						table.ajax.reload(); 
-                        
-
-                    }else{
-                        $.each(data.errors, function(fieldName, field){
-                            $.each(field, function(index, msg){
-                                $('#'+fieldName).addClass('is-invalid state-invalid');
-                               errorDiv = $('#'+fieldName).parent('div');
-                               errorDiv.append('<div class="invalid-feedback">'+msg+'</div>');
-                            });
-                        });
-                        errorMsg('Update Loan Status','Input error');
-                    }
-                    buttonLoading('reset', $this);
-                    
-                },
-                error: function() {
-                    errorMsg('Update Loan Status', 'There has been an error, please alert us immediately');
-                    buttonLoading('reset', $this);
-                }
-
-            });
-
-            return false;
-           });
-		   
-		   
+			
 		   $('#submitForm2').submit(function(){
             var $this = $('#submitButton2');
             buttonLoading('loading', $this);
@@ -304,23 +227,7 @@
 				$('.create-link').attr('href', url);
 			});
 			
-			$(document).on('change', '#loans_status', function(){
-				
-				parent_id = $(this).val();
-				$('#loans_sub_status').html('<option value="0">Loading......</option>');
-				$.ajax({
-                    url: '{{route('loan-sub-status', '')}}'+'/'+parent_id,
-                    type: 'GET',
-                    success: function(data){
-                        $('#loans_sub_status').html('<option value="">Select Sub Status</option>');
-						$.each(data.data, function(key, status){
-							$('#loans_sub_status').append('<option value="'+status.id+'">'+status.title+'</option>');
-						})
-                    }
-                });
-				
-				
-			});
+			
             
         });
     </script>

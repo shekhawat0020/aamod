@@ -113,15 +113,21 @@ Route::group(['middleware' => ['auth'], 'namespace' => 'Backend'], function() {
     Route::group(['middleware' => ['permission:Loan Master']], function() {
         Route::get('/loan', 'LoanController@index')->name('loan-list')->middleware(['permission:Loan List']);
         Route::get('/loan/create/{loan_type_id}', 'LoanController@create')->name('loan-create')->middleware(['permission:Loan Create']);
-        Route::get('/loan/status/form/{loan_id}', 'LoanController@getStatusForm')->name('loan-status-form')->middleware(['permission:Loan Update Status']);
         Route::get('/loan/assign/form/{loan_id}', 'LoanController@getAssignForm')->name('loan-assign-form')->middleware(['permission:Loan Update Assign']);
-        Route::post('/loan/status/update/', 'LoanController@updateLoanStatus')->name('update-loan-status')->middleware(['permission:Loan Update Status']);
         Route::post('/loan/assign/', 'LoanController@updateLoanAssign')->name('update-loan-assign')->middleware(['permission:Loan Update Assign']);
         Route::post('/loan/store', 'LoanController@store')->name('loan-save')->middleware(['permission:Loan Create']);
         Route::get('/loan/edit/{id}', 'LoanController@edit')->name('loan-edit')->middleware(['permission:Loan Edit']);
         Route::post('/loan/update/{id}', 'LoanController@update')->name('loan-update')->middleware(['permission:Loan Edit']);
         Route::get('/ajax/loan/view/{id}', 'LoanController@show')->name('loan-view')->middleware(['permission:Loan View']);
-		Route::get('/ajax/loan/substatus/{parent_id}', 'LoanController@getSubStatus')->name('loan-sub-status')->middleware(['permission:Loan Update Status']);
+		
+		
+        Route::get('/loan/action/{id}', 'LoanController@action')->name('loan-action')->middleware(['permission:Loan Action']);
+        Route::post('/loan/add-bank/{id}', 'LoanController@addBank')->name('loan-add-bank')->middleware(['permission:Loan Add Bank']);
+        Route::get('/loan/bank-list/{id}', 'LoanController@bankList')->name('loan-bank-list')->middleware(['permission:Loan Bank List']);
+		Route::get('/loan/status/form/{loan_bank_id}', 'LoanController@getStatusForm')->name('loan-status-form')->middleware(['permission:Loan Update Status']);
+		Route::post('/loan/status/update/', 'LoanController@updateLoanStatus')->name('update-loan-status')->middleware(['permission:Loan Update Status']);
+        Route::get('/ajax/loan/substatus/{parent_id}', 'LoanController@getSubStatus')->name('loan-sub-status')->middleware(['permission:Loan Update Status']);
+		
     });
 	
 

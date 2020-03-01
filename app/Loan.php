@@ -26,10 +26,11 @@ class Loan extends Model
        return $this->hasOne('App\LoanType', 'id', 'loan_type_id');
     }
 	
-	public function loan_status_detail()
+	public function loan_bank()
     {
-       return $this->hasOne('App\LoanStatus', 'id', 'loan_status');
+       return $this->hasMany('App\LoanBank', 'loan_id', 'id');
     }
+	
 	
 	public function assign_detail()
     {

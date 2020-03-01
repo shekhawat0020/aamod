@@ -52,7 +52,7 @@ class DataController extends Controller
         ]);
     }
 	
-	public function borrowerLoanFields(Request $request){
+	public function borrowerLoanList(Request $request){
 		
 		$validator = Validator::make($request->all(), [
             'borrower_id' => 'required|exists:borrower,id',
@@ -65,11 +65,50 @@ class DataController extends Controller
 			]);
         }
 		
-		$loans = Loan::with('loan_status_detail')
-		->with('assign_detail')
+		$loans = Loan::with('assign_detail')
 		->with('borrower_detail')
 		->with('loan_type_detail')
+		->where('borrower_id', $request->borrower_id)
 		->latest()->get();
+		
+		return response()->json([
+            'status' => true,
+            'site_url' => URL::to('/').'/',
+            'data' => $loans
+        ]);
+		
+	}
+	
+	public function borrowerLoanDetail(Request $request){
+		
+		$validator = Validator::make($request->all(), [
+            'loan_id' => 'required|exists:loan,id',
+        ]);
+
+        if ($validator->fails()) {
+		   return response()->json([
+			'status' => false,
+			'errors' => $validator->errors()
+			]);
+        }
+		
+		$loans = Loan::with('assign_detail')
+		->with('borrower_detail')
+		->with('loan_type_detail')
+		->with('loan_type_detail')
+		->with(['loan_bank' => function($query){
+			
+			$query->with(['loan_bank_all_status_detail' => function($q){
+				
+				$q->with('loan_status_detail');
+				$q->with('loan_sub_status_detail');
+				
+			}]);
+			
+			
+		}])
+		->where('id', $request->loan_id)
+		->first();
 		
 		return response()->json([
             'status' => true,

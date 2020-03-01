@@ -1,6 +1,6 @@
 @extends('admin/layouts/default')
 @section('title')
-<title>Edit Loan Type</title>
+<title>Edit Loan</title>
 @stop
 
 @section('inlinecss')
@@ -9,9 +9,9 @@
 @stop
 
 @section('breadcrum')
-<h1 class="page-title">Edit Loan Type</h1>
+<h1 class="page-title">Edit Loan</h1>
 <ol class="breadcrumb">
-    <li class="breadcrumb-item"><a href="#">Loan Type</a></li>
+    <li class="breadcrumb-item"><a href="#">Loan</a></li>
     <li class="breadcrumb-item active" aria-current="page">Edit</li>
 </ol>
 @stop
@@ -25,51 +25,80 @@
         <!-- PAGE-HEADER END -->
 
         <!--  Start Content -->
-    <form id="submitForm" class="row"  method="post" action="{{route('loan-type-update', $loan->id)}}">
+    <form id="submitForm" class="row"  method="post" action="{{route('loan-update', $loan->id)}}">
         {{csrf_field()}}
+		<input type="hidden" name="loan_type" value="{{$loan_type_id}}">
         <!-- COL END -->
 							<div class="col-lg-6">
 								<div class="card">
 									<div class="card-header">
-										<h3 class="card-title">Loan Type Forms</h3>
+										<h3 class="card-title">Loan Form for {{$loanType->title}}</h3>
 									</div>
 									<div class="card-body">
-                                    
-										<div class="form-group">
-											<label class="form-label">Title *</label>
-											<input type="text" class="form-control" name="title" id="title" placeholder="Title.." value="{{$loan->title}}">
+									
+									<div class="form-group">
+											<label class="form-label"> Apply for Borrower *</label>											
+											<select class="form-control select2" name="borrower" id="borrower" required>
+												<option value=""> Select Borrower </option>
+												@foreach($borrowers as $borrower)
+												<option @if($loan->borrower_id == $borrower->id) selected @endif  value="{{$borrower->id}}">{{$borrower->name}}</option>
+												@endforeach
+											</select>
 										</div>
-										
-										<div class="form-group">
-											<label class="form-label">Description *</label>
-											<input type="text" class="form-control" name="description" id="description" placeholder="" value="{{$loan->description}}">
+                                    @foreach($fields as $field)
+									
+									@if($field->field_type == 'Text' || $field->field_type == 'Mobile' || $field->field_type == 'Credit Card' || $field->field_type == 'Aadhar' || $field->field_type == 'Pan')
+										<div class="form-group @if($field->conditional_type != 'None') condtional-field @endif" @if($field->conditional_type != 'None')style="display:none" data-condition-field="{{preg_replace('/[^A-Za-z0-9\_]/', '', str_replace(' ', '_', $field->condition_field))}}" data-condition-value="{{$field->condition_value}}"@endif>
+											<label class="form-label">{{$field->title}} @if($field->field_required)* @endif</label>											
+											<input type="text" class="form-control" name="{{preg_replace('/[^A-Za-z0-9\_]/', '', str_replace(' ', '_', $field->title))}}" id="{{preg_replace('/[^A-Za-z0-9\_]/', '', str_replace(' ', '_', $field->title))}}" @if($field->field_required)required @endif>
 										</div>
-										<div class="form-group">
-											<label class="form-label">Icon *</label>
-											<input type="file" class="form-control" name="icon" id="icon" placeholder="">
-											<img id="icon_image_select" src="{{ asset(''.$loan->icon) }}" style="width:100px">
+									@endif
+									
+									@if($field->field_type == 'Email')
+										<div class="form-group @if($field->conditional_type != 'None') condtional-field @endif" @if($field->conditional_type != 'None')style="display:none" data-condition-field="{{preg_replace('/[^A-Za-z0-9\_]/', '', str_replace(' ', '_', $field->condition_field))}}" data-condition-value="{{$field->condition_value}}"@endif>
+											<label class="form-label">{{$field->title}} @if($field->field_required)* @endif</label>											
+											<input type="email" class="form-control" name="{{preg_replace('/[^A-Za-z0-9\_]/', '', str_replace(' ', '_', $field->title))}}" id="{{preg_replace('/[^A-Za-z0-9\_]/', '', str_replace(' ', '_', $field->title))}}" @if($field->field_required)required @endif>
 										</div>
+									@endif
+									
+									@if($field->field_type == 'Numeric')
+										<div class="form-group @if($field->conditional_type != 'None') condtional-field @endif" @if($field->conditional_type != 'None')style="display:none" data-condition-field="{{preg_replace('/[^A-Za-z0-9\_]/', '', str_replace(' ', '_', $field->condition_field))}}" data-condition-value="{{$field->condition_value}}"@endif>
+											<label class="form-label">{{$field->title}} @if($field->field_required)* @endif</label>											
+											<input type="numeric" class="form-control" name="{{preg_replace('/[^A-Za-z0-9\_]/', '', str_replace(' ', '_', $field->title))}}" id="{{preg_replace('/[^A-Za-z0-9\_]/', '', str_replace(' ', '_', $field->title))}}" @if($field->field_required)required @endif>
+										</div>
+									@endif
+									
+									@if($field->field_type == 'Date')
+										<div class="form-group @if($field->conditional_type != 'None') condtional-field @endif" @if($field->conditional_type != 'None')style="display:none" data-condition-field="{{preg_replace('/[^A-Za-z0-9\_]/', '', str_replace(' ', '_', $field->condition_field))}}" data-condition-value="{{$field->condition_value}}"@endif>
+											<label class="form-label">{{$field->title}} @if($field->field_required)* @endif</label>											
+											<input type="date" class="form-control" name="{{preg_replace('/[^A-Za-z0-9\_]/', '', str_replace(' ', '_', $field->title))}}" id="{{preg_replace('/[^A-Za-z0-9\_]/', '', str_replace(' ', '_', $field->title))}}" @if($field->field_required)required @endif>
+										</div>
+									@endif
+									
+									@if($field->field_type == 'Textarea')
+										<div class="form-group @if($field->conditional_type != 'None') condtional-field @endif" @if($field->conditional_type != 'None')style="display:none" data-condition-field="{{preg_replace('/[^A-Za-z0-9\_]/', '', str_replace(' ', '_', $field->condition_field))}}" data-condition-value="{{$field->condition_value}}"@endif>
+											<label class="form-label">{{$field->title}} @if($field->field_required)* @endif</label>											
+											<textarea class="form-control" name="{{preg_replace('/[^A-Za-z0-9\_]/', '', str_replace(' ', '_', $field->title))}}" id="{{preg_replace('/[^A-Za-z0-9\_]/', '', str_replace(' ', '_', $field->title))}}" @if($field->field_required)required @endif></textarea>
+										</div>
+									@endif
 
-										<div class="form-group">
-											<label class="form-label">Fields *</label>
-											<select name="loan_fields[]" id="loan_fields" multiple="multiple" class="multi-select form-control">
-												
-                                                @foreach($fields as $field)
-                                                <option @if(in_array($field->id,json_decode($loan->loan_fields))) selected @endif value="{{$field->id}}">{{$field->title}}</option>
-                                                @endforeach
+									@if($field->field_type == 'Select')
+										<div class="form-group @if($field->conditional_type != 'None') condtional-field @endif" @if($field->conditional_type != 'None')style="display:none" data-condition-field="{{preg_replace('/[^A-Za-z0-9\_]/', '', str_replace(' ', '_', $field->condition_field))}}" data-condition-value="{{$field->condition_value}}"@endif>
+											<label class="form-label">{{$field->title}} @if($field->field_required)* @endif</label>											
+											<select class="form-control" name="{{preg_replace('/[^A-Za-z0-9\_]/', '', str_replace(' ', '_', $field->title))}}" id="{{preg_replace('/[^A-Za-z0-9\_]/', '', str_replace(' ', '_', $field->title))}}" @if($field->field_required)required @endif>
+												@php  $options =  json_decode($field->options_value)  @endphp
+												<option value=""> Select {{$field->title}} </option>
+												@foreach($options as $option)
+												<option value="{{$option}}">{{$option}}</option>
+												@endforeach
 											</select>
 										</div>
-                                        
+									@endif
 										
-                                        <div class="form-group">
-											<label class="form-label">Status</label>
-											<select name="status" id="status" class="form-control custom-select">
-												<option @if($loan->status == 1) selected @endif value="1">Active</option>
-												<option @if($loan->status == 0) selected @endif value="0">InActive</option>
-											</select>
-                                        </div>
+									@endforeach	
+										
                                         <div class="card-footer"></div>
-                                            <button type="submit" id="submitButton" class="btn btn-primary float-right"  data-loading-text="<i class='fa fa-spinner fa-spin '></i> Sending..." data-rest-text="Update">Update</button>
+                                         <button type="submit" id="submitButton" class="btn btn-primary float-right"  data-loading-text="<i class='fa fa-spinner fa-spin '></i> Sending..." data-rest-text="Create">Create</button>
                                         
 										</div>
                                         
@@ -77,6 +106,7 @@
                                     
 								</div>
 							
+						
 							
 							</form>
         </div><!-- COL END -->
@@ -86,8 +116,8 @@
 </div>
 
 @stop
-@section('inlinejs')     
-    <script type="text/javascript">
+@section('inlinejs')
+<script type="text/javascript">
         
         $(function () { 
            $('#submitForm').submit(function(){
@@ -104,9 +134,8 @@
                 data: new FormData($('#submitForm')[0]),
                 success: function(data) {
                     if(data.status){
-						var btn = '<a href="{{route('loan-type-list')}}" class="btn btn-info btn-sm">GoTo List</a>';
-                        successMsg('Edit Loan Type', data.msg, btn);
-                        
+						var btn = '<a href="{{route('loan-list')}}" class="btn btn-info btn-sm">GoTo List</a>';
+                        successMsg('Create Loan', data.msg, btn);
 
                     }else{
                         $.each(data.errors, function(fieldName, field){
@@ -116,13 +145,13 @@
                                errorDiv.append('<div class="invalid-feedback">'+msg+'</div>');
                             });
                         });
-                        errorMsg('Edit Loan Type','Input error');
+                        errorMsg('Create Loan','Input error');
                     }
                     buttonLoading('reset', $this);
                     
                 },
                 error: function() {
-                    errorMsg('Edit Loan Type', 'There has been an error, please alert us immediately');
+                    errorMsg('Create Loan Type', 'There has been an error, please alert us immediately');
                     buttonLoading('reset', $this);
                 }
 
@@ -131,22 +160,28 @@
             return false;
            });
 
-           });
-		   $("#icon").change(function(){
-                readURL(this);
-            });
-            function readURL(input) {
-                if (input.files && input.files[0]) {
-                    var reader = new FileReader();
+          
+		$('.form-control').change(function(){
+			id = $(this).attr('id');
+			fieldvalue = $(this).val();
+			$('.condtional-field').each(function(key,obj){
+				if($(this).attr('data-condition-field') == id) {
+					
+					condtionValues = $(this).attr('data-condition-value');
+					condtionValues = condtionValues.split(',');	
+					console.log(condtionValues);					
+					if($.inArray(fieldvalue,condtionValues) != -1){
+						$(this).show();
+					}else{
+						$(this).hide();
+						$(this).find('.form-control').val("");					
+					}
+				}
+			});
+		});
 
-                    reader.onload = function (e) {
-                        $('#icon_image_select').attr('src', e.target.result);
-                    }
-
-                    reader.readAsDataURL(input.files[0]);
-                }
-            }
-		   
+	    });
+            
        
     </script>
 @stop	
@@ -158,11 +193,7 @@
 <script>
 
 $(function () { 
-  $('#loan_fields').multiselect();
-  $("ul.selected li").each(function(){
-		var selected_value = $(this).attr('data-selected-value');
-		//alert(selected_value);
-	});
+            $('#loan_fields').multiselect();
 });			
   </script> 
 @stop
