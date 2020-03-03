@@ -59,6 +59,16 @@
                                                 @endforeach
 											</select>
 										</div>
+										
+										<div class="form-group">
+											<label class="form-label">Document Group *</label>
+											<select name="document_group" id="document_group" class="form-control">
+												<option value="">Select Group</option>
+                                                @foreach($DocumentGroup as $group)
+                                                <option @if($loan->document_group == $group->id) selected @endif value="{{$group->id}}">{{$group->title}}</option>
+                                                @endforeach
+											</select>
+										</div>
                                         
 										
                                         <div class="form-group">

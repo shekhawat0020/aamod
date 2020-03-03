@@ -128,6 +128,8 @@ Route::group(['middleware' => ['auth'], 'namespace' => 'Backend'], function() {
 		Route::post('/loan/status/update/', 'LoanController@updateLoanStatus')->name('update-loan-status')->middleware(['permission:Loan Update Status']);
         Route::get('/ajax/loan/substatus/{parent_id}', 'LoanController@getSubStatus')->name('loan-sub-status')->middleware(['permission:Loan Update Status']);
 		
+        Route::get('/loan/bank/assign/form/{loan_bank_id}', 'LoanController@getBankAssignForm')->name('loan-bank-assign-form')->middleware(['permission:Loan Bank Assign']);
+        Route::post('/loan/bank/assign/', 'LoanController@updateLoanBankAssign')->name('update-loan-bank-assign')->middleware(['permission:Loan Bank Assign']);
     });
 	
 

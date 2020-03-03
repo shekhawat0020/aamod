@@ -31,5 +31,8 @@ class LoanBank extends Model
 		
 	}
 	
+	public function bank_assign_to(){
+		return $this->hasOne('App\User', 'id', 'assign_to');
+	}
 	
 }

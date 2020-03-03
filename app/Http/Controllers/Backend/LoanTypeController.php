@@ -5,6 +5,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\LoanType;
 use App\LoanField;
+use App\DocumentGroup;
 use Spatie\Permission\Models\Role;
 use DB;
 use Hash;
@@ -56,7 +57,8 @@ class LoanTypeController extends Controller
     public function create()
     {
 		$fields = LoanField::where('status', 1)->get();
-        return view('admin.loan-type.loan-type-create',compact('fields'));
+		$DocumentGroup = DocumentGroup::where('status', 1)->get();
+        return view('admin.loan-type.loan-type-create',compact('fields', 'DocumentGroup'));
     }
 
 
@@ -72,6 +74,7 @@ class LoanTypeController extends Controller
         $validator = Validator::make($request->all(), [
             'title' => 'required|unique:loantype,title',
             'loan_fields' => 'required',
+            'document_group' => 'required',
             'description' => 'required',
             'icon' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
             'status' => 'required'
@@ -94,6 +97,7 @@ class LoanTypeController extends Controller
         $loan = new LoanType();
         $loan->title = $request->title;
         $loan->loan_fields = json_encode($request->loan_fields);
+        $loan->document_group = $request->document_group;
         $loan->status = $request->status;
         $loan->description = $request->description;
         $loan->icon = $imageName;
@@ -132,8 +136,10 @@ class LoanTypeController extends Controller
         $loan = LoanType::find($id);
 		$fieldId = implode(',',json_decode($loan->loan_fields));
 		
-        $fields = LoanField::where('status', 1)->orderByRaw("FIELD(id, $fieldId)")->get();		
-        return view('admin.loan-type.loan-type-edit',compact('loan', 'fields'));
+        $fields = LoanField::where('status', 1)->orderByRaw("FIELD(id, $fieldId)")->get();
+		
+		$DocumentGroup = DocumentGroup::where('status', 1)->get();
+        return view('admin.loan-type.loan-type-edit',compact('loan', 'fields', 'DocumentGroup'));
     }
 
 
@@ -151,6 +157,7 @@ class LoanTypeController extends Controller
         $validator = Validator::make($request->all(), [
             'title' => 'required|unique:loantype,title,'.$id,
             'loan_fields' => 'required',
+            'document_group' => 'required',
             'description' => 'required',
             'icon' => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048',
             'status' => 'required'
@@ -173,6 +180,7 @@ class LoanTypeController extends Controller
         $loan = LoanType::find($id);
         $loan->title = $request->title;
         $loan->loan_fields = json_encode($request->loan_fields);
+        $loan->document_group = $request->document_group;
         $loan->status = $request->status;
         $loan->description = $request->description;
 		if($imageName){

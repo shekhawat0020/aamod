@@ -173,6 +173,7 @@
 										  <th>Bank</th>
 										  <th>Status</th>
 										  <th>Sub Status</th>
+										  <th>Assign TO</th>
 										  <th width="100px">Action</th>
 									  </tr>
 								  </thead>
@@ -213,6 +214,31 @@
 			<div class="modal-footer">
 				<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
 				 <button type="submit" id="submitButton2" class="btn btn-primary float-right"  data-loading-text="<i class='fa fa-spinner fa-spin '></i> Sending..." data-rest-text="Submit">Submit</button>
+				
+			</div>
+			</form>
+		</div>
+	</div>
+</div>
+<!-- Status Update CLOSED -->
+
+    <!-- Status Update MODAL -->
+<div class="modal fade" id="assignDetail" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
+	<div class="modal-dialog" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title" id="exampleModalLongTitle">Assign Form</h5>
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+					<span aria-hidden="true">&times;</span>
+				</button>
+			</div>
+			<form  id="submitForm3" action="{{route('update-loan-bank-assign')}}">
+			<div class="modal-body">
+			
+            </div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+				 <button type="submit" id="submitButton3" class="btn btn-primary float-right"  data-loading-text="<i class='fa fa-spinner fa-spin '></i> Sending..." data-rest-text="Submit">Submit</button>
 				
 			</div>
 			</form>
@@ -281,6 +307,7 @@
                     {data: 'bank_detail.title', name: 'bank_detail.title'},                   
                     {data: 'loan_bank_status_detail.loan_status_detail.title', name: 'bank_detail.title'},                   
                     {data: 'loan_bank_status_detail.loan_sub_status_detail.title', name: 'bank_detail.title'},                   
+                    {data: 'bank_assign_to.name', name: 'bank_assign_to.name'},                   
                     {data: 'action', name: 'action', orderable: false, searchable: false},
                 ]
             });
@@ -295,6 +322,20 @@
                     type: 'GET',
                     success: function(data){
                         $('#statusDetail').find('.modal-body').html(data);
+                    }
+                });
+            });
+			
+			
+			$(document).on('click','.assignDetail', function(){
+                $('#assignDetail').modal('show');
+                url = $(this).attr('data-url');
+                $('#assignDetail').find('.modal-body').html('<p class="ploading"><i class="fa fa-spinner fa-spin"></i></p>')
+                $.ajax({
+                    url: url,
+                    type: 'GET',
+                    success: function(data){
+                        $('#assignDetail').find('.modal-body').html(data);
                     }
                 });
             });
@@ -361,7 +402,50 @@
 				
 			});
 		   
-		
+		$('#submitForm3').submit(function(){
+            var $this = $('#submitButton3');
+            buttonLoading('loading', $this);
+            $('.is-invalid').removeClass('is-invalid state-invalid');
+            $('.invalid-feedback').remove();
+            $.ajax({
+                url: $('#submitForm3').attr('action'),
+                type: "POST",
+                processData: false,  // Important!
+                contentType: false,
+                cache: false,
+                data: new FormData($('#submitForm3')[0]),
+                success: function(data) {
+                    if(data.status){
+						var btn = '<a href="{{route('loan-type-list')}}" class="btn btn-info btn-sm">GoTo List</a>';
+                        successMsg('Assign Loan', data.msg, btn);
+						$('#assignDetail').modal('hide');
+						table.ajax.reload(); 
+                        
+
+                    }else{
+                        $.each(data.errors, function(fieldName, field){
+                            $.each(field, function(index, msg){
+                                $('#'+fieldName).addClass('is-invalid state-invalid');
+                               errorDiv = $('#'+fieldName).parent('div');
+                               errorDiv.append('<div class="invalid-feedback">'+msg+'</div>');
+                            });
+                        });
+                        errorMsg('Assign Loan','Input error');
+                    }
+                    buttonLoading('reset', $this);
+                    
+                },
+                error: function() {
+                    errorMsg('Assign Loan', 'There has been an error, please alert us immediately');
+                    buttonLoading('reset', $this);
+                }
+
+            });
+
+            return false;
+           });
+		   
+		   
 
 	    });
             

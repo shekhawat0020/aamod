@@ -327,6 +327,43 @@ class LoanController extends Controller
 	
 
 	
+	public function getBankAssignForm($loan_bank_id){
+		$loan_bank = LoanBank::find($loan_bank_id);
+		$users = User::role('Empolyee')->get();
+		return view('admin.loan.model.bank-assign-form',compact('loan_bank', 'users'));
+		
+	}
+	
+	
+	public function updateLoanBankAssign(Request $request){
+		
+		$validator = Validator::make($request->all(), [
+            'loan_bank_id' => 'required|exists:loan_bank,id',
+            'assign_to' => 'required|exists:users,id',
+        ]);
+
+        if ($validator->fails()) {
+		   return response()->json([
+			'status' => false,
+			'errors' => $validator->errors()
+			]);
+        }
+		
+		$loan = LoanBank::find($request->loan_bank_id);
+		$loan->assign_to = $request->assign_to;
+		$loan->save(); 
+		return response()->json([
+            'status' => true,
+            'msg' => 'Assign TO Updated'
+			]);
+		
+	}
+	
+
+	
+	
+	
+	
 	public function addBank(Request $request, $loan_id){
 		$validator = Validator::make($request->all(), [
             'bank' => 'required'
@@ -372,6 +409,7 @@ class LoanController extends Controller
 			$query->latest();
 			
 		}])
+		->with('bank_assign_to')
 		->get();
             return Datatables::of($data)
                     ->addIndexColumn()
@@ -380,6 +418,9 @@ class LoanController extends Controller
                         						
 						if(Auth()->user()->can('Loan Status Add')){
                         $btn .= ' <button type="button" data-url="'.route('loan-status-form', $row->id).'" class="edit btn btn-primary btn-sm statusDetail">Update Status</button>';
+                        }
+						if(Auth()->user()->can('Loan Bank Assign')){
+                        $btn .= ' <button type="button" data-url="'.route('loan-bank-assign-form', $row->id).'" class="edit btn btn-primary btn-sm assignDetail">Assign</button>';
                         }
                         return $btn;
                     })
