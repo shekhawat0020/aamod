@@ -59,8 +59,8 @@
 										
 										<div class="form-group">
 											<label class="form-label">Document Group *</label>
-											<select name="document_group" id="document_group" class="form-control">
-												<option value="">Select Group</option>
+											<select name="document_group[]" id="document_group" multiple="multiple" class="multi-select form-control">
+												
                                                 @foreach($DocumentGroup as $group)
                                                 <option value="{{$group->id}}">{{$group->title}}</option>
                                                 @endforeach
@@ -154,6 +154,7 @@
 
 $(function () { 
             $('#loan_fields').multiselect();
+            $('#document_group').multiselect();
 });			
   </script> 
 @stop

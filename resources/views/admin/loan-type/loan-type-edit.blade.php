@@ -62,10 +62,10 @@
 										
 										<div class="form-group">
 											<label class="form-label">Document Group *</label>
-											<select name="document_group" id="document_group" class="form-control">
-												<option value="">Select Group</option>
+											<select name="document_group[]" id="document_group" multiple="multiple" class="multi-select form-control">
+												
                                                 @foreach($DocumentGroup as $group)
-                                                <option @if($loan->document_group == $group->id) selected @endif value="{{$group->id}}">{{$group->title}}</option>
+                                                <option @if(in_array($group->id,json_decode($loan->document_group))) selected @endif value="{{$group->id}}">{{$group->title}}</option>
                                                 @endforeach
 											</select>
 										</div>
@@ -169,6 +169,7 @@
 
 $(function () { 
   $('#loan_fields').multiselect();
+  $('#document_group').multiselect();
   $("ul.selected li").each(function(){
 		var selected_value = $(this).attr('data-selected-value');
 		//alert(selected_value);

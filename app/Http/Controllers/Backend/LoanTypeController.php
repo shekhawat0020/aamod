@@ -97,7 +97,7 @@ class LoanTypeController extends Controller
         $loan = new LoanType();
         $loan->title = $request->title;
         $loan->loan_fields = json_encode($request->loan_fields);
-        $loan->document_group = $request->document_group;
+        $loan->document_group = json_encode($request->document_group);
         $loan->status = $request->status;
         $loan->description = $request->description;
         $loan->icon = $imageName;
@@ -137,8 +137,9 @@ class LoanTypeController extends Controller
 		$fieldId = implode(',',json_decode($loan->loan_fields));
 		
         $fields = LoanField::where('status', 1)->orderByRaw("FIELD(id, $fieldId)")->get();
+		$documentId = implode(',',json_decode($loan->document_group));
 		
-		$DocumentGroup = DocumentGroup::where('status', 1)->get();
+		$DocumentGroup = DocumentGroup::where('status', 1)->orderByRaw("FIELD(id, $documentId)")->get();
         return view('admin.loan-type.loan-type-edit',compact('loan', 'fields', 'DocumentGroup'));
     }
 
