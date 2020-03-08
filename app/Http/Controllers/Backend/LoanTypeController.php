@@ -134,6 +134,7 @@ class LoanTypeController extends Controller
     public function edit($id)
     {
         $loan = LoanType::find($id);
+		
 		$fieldId = implode(',',json_decode($loan->loan_fields));
 		
         $fields = LoanField::where('status', 1)->orderByRaw("FIELD(id, $fieldId)")->get();

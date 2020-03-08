@@ -85,11 +85,24 @@ class LoanController extends Controller
      */
     public function store(Request $request)
     {
+		//get loan fields
+		$loanType = LoanType::where('id', $request->loan_type)->first();
+		$loanfields = json_decode($loanType->loan_fields);	
+		$fields = LoanField::whereIn('id', $loanfields)->get();
         
-        $validator = Validator::make($request->all(), [
-            'borrower' => 'required|exists:borrower,id',
+        $rules = [
+			'borrower' => 'required|exists:borrower,id',
 			'loan_type' => 'required|exists:loantype,id'
-        ]);
+		];
+		
+		$data = $this->createRule($rules, $fields, $request);
+		
+		$rules = $data['rules'];
+		$fields = $data['fields'];
+		
+		
+		
+        $validator = Validator::make($request->all(),  $rules);
 
         if ($validator->fails()) {
 		   return response()->json([
@@ -103,6 +116,7 @@ class LoanController extends Controller
         $loan = new Loan();
         $loan->borrower_id = $request->borrower;
         $loan->loan_type_id = $request->loan_type;
+        $loan->fields = json_encode($fields);
         $loan->save();
 
 
@@ -136,6 +150,13 @@ class LoanController extends Controller
     public function edit($id)
     {
         $loan = Loan::find($id);
+		
+		
+		$inputs = ($loan->fields != null && $loan->fields != "")? json_decode($loan->fields): 0;
+		
+		$inputs = (array)$inputs;
+		
+		
 		$loan_type_id = $loan->loan_type_id;
 		$loanType = LoanType::where('id', $loan->loan_type_id)->first();
 		$loanfields = json_decode($loanType->loan_fields);
@@ -146,7 +167,7 @@ class LoanController extends Controller
 			return array_search($model->id, $loanfields);
 		});
 		$borrowers = Borrower::where('status', 1)->get();
-        return view('admin.loan.loan-edit',compact('loan','loanType','fields', 'borrowers', 'loan_type_id'));
+        return view('admin.loan.loan-edit',compact('loan','loanType','fields', 'borrowers', 'loan_type_id', 'inputs'));
     }
 
 
@@ -160,14 +181,26 @@ class LoanController extends Controller
     public function update(Request $request, $id)
     {
 
-
-        $validator = Validator::make($request->all(), [
-            'title' => 'required|unique:loantype,title,'.$id,
-            'loan_fields' => 'required',
-            'description' => 'required',
-            'icon' => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048',
-            'status' => 'required'
-        ]);
+		
+		//get loan fields
+		$loanType = LoanType::where('id', $request->loan_type)->first();
+		$loanfields = json_decode($loanType->loan_fields);	
+		$fields = LoanField::whereIn('id', $loanfields)->get();
+		
+		
+		$rules = [
+			'borrower' => 'required|exists:borrower,id',
+			'loan_type' => 'required|exists:loantype,id'
+		];
+		
+		$data = $this->createRule($rules, $fields, $request);
+		
+		$rules = $data['rules'];
+		$fields = $data['fields'];
+		
+		
+		
+        $validator = Validator::make($request->all(),  $rules);
 
         if ($validator->fails()) {
 		   return response()->json([
@@ -179,13 +212,9 @@ class LoanController extends Controller
 		
         
         $loan = Loan::find($id);
-        $loan->title = $request->title;
-        $loan->loan_fields = json_encode($request->loan_fields);
-        $loan->status = $request->status;
-        $loan->description = $request->description;
-		if($imageName){
-        $loan->icon = $imageName;
-		}
+        $loan->borrower_id = $request->borrower;
+        $loan->loan_type_id = $request->loan_type;
+        $loan->fields = json_encode($fields);
         $loan->save();
 
         
@@ -196,6 +225,115 @@ class LoanController extends Controller
 			]);
 
     }
+	
+	
+	public function createRule($rules, $fields, $request){
+		
+		$input = array();
+		foreach($fields as $field){
+			
+			$name = preg_replace('/[^A-Za-z0-9\_]/', '', str_replace(' ', '_', $field->title));
+			$input[$name] = $request->input($name);
+			if($field->field_type == 'Select'){
+				$option = json_decode($field->options_value);
+				$option = implode(',', $option);
+				if($field->field_required){
+					$rules[$name] = "required|in:".$option;
+				}else{
+					$rules[$name] = "nullable|in:".$option;
+				}
+				
+				
+			}
+			
+			else if($field->field_type == 'Text'){
+				if($field->field_required){
+					$rules[$name] = "required";
+				}else{
+					$rules[$name] = "";
+				}
+				
+			}
+			
+			else if($field->field_type == 'Numeric'){
+				if($field->field_required){
+					$rules[$name] = "required|numeric";
+				}else{
+					$rules[$name] = "nullable|numeric";
+				}
+				
+			}
+			
+			else if($field->field_type == 'Textarea'){
+				if($field->field_required){
+					$rules[$name] = "required";
+				}else{
+					$rules[$name] = "";
+				}
+				
+			}
+			
+			else if($field->field_type == 'Date'){
+				if($field->field_required){
+					$rules[$name] = "required|date_format:Y-m-d";
+				}else{
+					$rules[$name] = "nullable|date_format:Y-m-d";
+				}
+				
+			}
+			
+			else if($field->field_type == 'Mobile'){
+				if($field->field_required){
+					$rules[$name] = "required|min:10";
+				}else{
+					$rules[$name] = "nullable|min:10";
+				}
+				
+			}
+			
+			else if($field->field_type == 'Email'){
+				if($field->field_required){
+					$rules[$name] = "required|email";
+				}else{
+					$rules[$name] = "nullable|email";
+				}
+				
+			}
+			
+			else if($field->field_type == 'Credit Card'){
+				if($field->field_required){
+					$rules[$name] = "required";
+				}else{
+					$rules[$name] = "";
+				}
+				
+			}
+			
+			else if($field->field_type == 'Aadhar'){
+				if($field->field_required){
+					$rules[$name] = "required";
+				}else{
+					$rules[$name] = "";
+				}
+				
+			}
+			
+			else if($field->field_type == 'Pan'){
+				if($field->field_required){
+					$rules[$name] = "required";
+				}else{
+					$rules[$name] = "";
+				}
+				
+			}
+			
+			
+		}
+		$data['rules'] = $rules;
+		$data['fields'] = $input;
+		return $data;
+		
+	}
 
 	
 	

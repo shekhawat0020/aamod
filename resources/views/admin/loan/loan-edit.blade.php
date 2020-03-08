@@ -46,50 +46,50 @@
 											</select>
 										</div>
                                     @foreach($fields as $field)
-									
+									@php  $ftitle = preg_replace('/[^A-Za-z0-9\_]/', '', str_replace(' ', '_', $field->title));  @endphp
 									@if($field->field_type == 'Text' || $field->field_type == 'Mobile' || $field->field_type == 'Credit Card' || $field->field_type == 'Aadhar' || $field->field_type == 'Pan')
 										<div class="form-group @if($field->conditional_type != 'None') condtional-field @endif" @if($field->conditional_type != 'None')style="display:none" data-condition-field="{{preg_replace('/[^A-Za-z0-9\_]/', '', str_replace(' ', '_', $field->condition_field))}}" data-condition-value="{{$field->condition_value}}"@endif>
 											<label class="form-label">{{$field->title}} @if($field->field_required)* @endif</label>											
-											<input type="text" class="form-control" name="{{preg_replace('/[^A-Za-z0-9\_]/', '', str_replace(' ', '_', $field->title))}}" id="{{preg_replace('/[^A-Za-z0-9\_]/', '', str_replace(' ', '_', $field->title))}}" @if($field->field_required)required @endif>
+											<input type="text" class="form-control" name="{{$ftitle}}" id="{{$ftitle}}" @if($field->field_required)required @endif @if(isset($inputs[$ftitle])) value="{{$inputs[$ftitle]}}" @endif>
 										</div>
 									@endif
 									
 									@if($field->field_type == 'Email')
 										<div class="form-group @if($field->conditional_type != 'None') condtional-field @endif" @if($field->conditional_type != 'None')style="display:none" data-condition-field="{{preg_replace('/[^A-Za-z0-9\_]/', '', str_replace(' ', '_', $field->condition_field))}}" data-condition-value="{{$field->condition_value}}"@endif>
 											<label class="form-label">{{$field->title}} @if($field->field_required)* @endif</label>											
-											<input type="email" class="form-control" name="{{preg_replace('/[^A-Za-z0-9\_]/', '', str_replace(' ', '_', $field->title))}}" id="{{preg_replace('/[^A-Za-z0-9\_]/', '', str_replace(' ', '_', $field->title))}}" @if($field->field_required)required @endif>
+											<input type="email" class="form-control" name="{{$ftitle}}" id="{{$ftitle}}" @if($field->field_required)required @endif @if(isset($inputs[$ftitle])) value="{{$inputs[$ftitle]}}" @endif>
 										</div>
 									@endif
 									
 									@if($field->field_type == 'Numeric')
 										<div class="form-group @if($field->conditional_type != 'None') condtional-field @endif" @if($field->conditional_type != 'None')style="display:none" data-condition-field="{{preg_replace('/[^A-Za-z0-9\_]/', '', str_replace(' ', '_', $field->condition_field))}}" data-condition-value="{{$field->condition_value}}"@endif>
 											<label class="form-label">{{$field->title}} @if($field->field_required)* @endif</label>											
-											<input type="numeric" class="form-control" name="{{preg_replace('/[^A-Za-z0-9\_]/', '', str_replace(' ', '_', $field->title))}}" id="{{preg_replace('/[^A-Za-z0-9\_]/', '', str_replace(' ', '_', $field->title))}}" @if($field->field_required)required @endif>
+											<input type="numeric" class="form-control" name="{{$ftitle}}" id="{{$ftitle}}" @if($field->field_required)required @endif @if(isset($inputs[$ftitle])) value="{{$inputs[$ftitle]}}" @endif>
 										</div>
 									@endif
 									
 									@if($field->field_type == 'Date')
 										<div class="form-group @if($field->conditional_type != 'None') condtional-field @endif" @if($field->conditional_type != 'None')style="display:none" data-condition-field="{{preg_replace('/[^A-Za-z0-9\_]/', '', str_replace(' ', '_', $field->condition_field))}}" data-condition-value="{{$field->condition_value}}"@endif>
 											<label class="form-label">{{$field->title}} @if($field->field_required)* @endif</label>											
-											<input type="date" class="form-control" name="{{preg_replace('/[^A-Za-z0-9\_]/', '', str_replace(' ', '_', $field->title))}}" id="{{preg_replace('/[^A-Za-z0-9\_]/', '', str_replace(' ', '_', $field->title))}}" @if($field->field_required)required @endif>
+											<input type="date" class="form-control" name="{{$ftitle}}" id="{{$ftitle}}" @if($field->field_required)required @endif @if(isset($inputs[$ftitle])) value="{{$inputs[$ftitle]}}" @endif>
 										</div>
 									@endif
 									
 									@if($field->field_type == 'Textarea')
 										<div class="form-group @if($field->conditional_type != 'None') condtional-field @endif" @if($field->conditional_type != 'None')style="display:none" data-condition-field="{{preg_replace('/[^A-Za-z0-9\_]/', '', str_replace(' ', '_', $field->condition_field))}}" data-condition-value="{{$field->condition_value}}"@endif>
 											<label class="form-label">{{$field->title}} @if($field->field_required)* @endif</label>											
-											<textarea class="form-control" name="{{preg_replace('/[^A-Za-z0-9\_]/', '', str_replace(' ', '_', $field->title))}}" id="{{preg_replace('/[^A-Za-z0-9\_]/', '', str_replace(' ', '_', $field->title))}}" @if($field->field_required)required @endif></textarea>
+											<textarea class="form-control" name="{{$ftitle}}" id="{{$ftitle}}" @if($field->field_required)required @endif> @if(isset($inputs[$ftitle])){{$inputs[$ftitle]}}@endif</textarea>
 										</div>
 									@endif
 
 									@if($field->field_type == 'Select')
 										<div class="form-group @if($field->conditional_type != 'None') condtional-field @endif" @if($field->conditional_type != 'None')style="display:none" data-condition-field="{{preg_replace('/[^A-Za-z0-9\_]/', '', str_replace(' ', '_', $field->condition_field))}}" data-condition-value="{{$field->condition_value}}"@endif>
 											<label class="form-label">{{$field->title}} @if($field->field_required)* @endif</label>											
-											<select class="form-control" name="{{preg_replace('/[^A-Za-z0-9\_]/', '', str_replace(' ', '_', $field->title))}}" id="{{preg_replace('/[^A-Za-z0-9\_]/', '', str_replace(' ', '_', $field->title))}}" @if($field->field_required)required @endif>
+											<select class="form-control" name="{{$ftitle}}" id="{{$ftitle}}" @if($field->field_required)required @endif>
 												@php  $options =  json_decode($field->options_value)  @endphp
 												<option value=""> Select {{$field->title}} </option>
 												@foreach($options as $option)
-												<option value="{{$option}}">{{$option}}</option>
+												<option @if(isset($inputs[$ftitle]) && $inputs[$ftitle] == $option) selected @endif value="{{$option}}">{{$option}}</option>
 												@endforeach
 											</select>
 										</div>
@@ -98,7 +98,7 @@
 									@endforeach	
 										
                                         <div class="card-footer"></div>
-                                         <button type="submit" id="submitButton" class="btn btn-primary float-right"  data-loading-text="<i class='fa fa-spinner fa-spin '></i> Sending..." data-rest-text="Create">Create</button>
+                                         <button type="submit" id="submitButton" class="btn btn-primary float-right"  data-loading-text="<i class='fa fa-spinner fa-spin '></i> Sending..." data-rest-text="Update">Update</button>
                                         
 										</div>
                                         
@@ -179,21 +179,28 @@
 				}
 			});
 		});
+		
+		
+		
+		//on load show condition field
+		$('.form-control').each(function(){
+			id = $(this).attr('id');
+			fieldvalue = $(this).val();
+			$('.condtional-field').each(function(key,obj){
+				if($(this).attr('data-condition-field') == id) {
+					
+					condtionValues = $(this).attr('data-condition-value');
+					condtionValues = condtionValues.split(',');	
+					console.log(condtionValues);					
+					if($.inArray(fieldvalue,condtionValues) != -1){
+						$(this).show();
+					}
+				}
+			});
+		});
 
 	    });
             
        
     </script>
 @stop	
-@section('bottomjs')
-
-<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.5.1/jquery.min.js"></script>
-<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.10/jquery-ui.min.js"></script>
-<script src="{{ asset('admin/assets/multiselectbox/js/ui.multiselect.js') }}"></script>   
-<script>
-
-$(function () { 
-            $('#loan_fields').multiselect();
-});			
-  </script> 
-@stop
