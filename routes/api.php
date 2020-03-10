@@ -29,9 +29,13 @@ Route::group([
 	
 	//after login
 	Route::post('/loan-list', 'DataController@loanList');
-	Route::post('/loan-fields', 'DataController@loanFields');
 	Route::post('/borrower-loan-list', 'DataController@borrowerLoanList');
 	Route::post('/borrower-loan-detail', 'DataController@borrowerLoanDetail');
+	
+	
+	
+	Route::post('/create-loan-form', 'DataController@createLoanForm');
+	Route::post('/save-loan-form', 'DataController@saveLoanForm');
     Route::group([
       'middleware' => 'auth:api'
     ], function() {
