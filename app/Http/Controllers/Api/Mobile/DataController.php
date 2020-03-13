@@ -58,6 +58,7 @@ class DataController extends Controller
 	
 	public function saveLoanForm(Request $request)
     {
+		dd($request);
 		//get loan fields
 		$loanType = LoanType::where('id', $request->loan_type)->first();
 		$loanfields = json_decode($loanType->loan_fields);	
