@@ -35,12 +35,16 @@ class DataController extends Controller
 	public function createLoanForm(Request $request)
     {
 		$loanType = LoanType::where('id', $request->loan_type)->first();
-		$loanfields = json_decode($loanType->loan_fields);
-		$fields = LoanField::whereIn('id', $loanfields)->get();
-		$fields = $fields->sortBy(function ($model) use ($loanfields) {
-			return array_search($model->id, $loanfields);
-		});
+		//$loanfields = json_decode($loanType->loan_fields);
+		$loanfields = implode(',',json_decode($loanType->loan_fields));
+		//$fields = LoanField::whereIn('id', $loanfields)->get();
+		$fields = LoanField::where('status', 1)->orderByRaw("FIELD(id, $loanfields)")->get();
+		//$fields = $fields->sortBy(function ($model) use ($loanfields) {
+		//	return array_search($model->id, $loanfields);
+		//});
 		$borrowers = Borrower::where('status', 1)->get();
+		
+		
 		
 		return response()->json([
             'status' => true,
