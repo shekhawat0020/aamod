@@ -63,9 +63,15 @@
 										<div class="form-group">
 											<label class="form-label">Document Group *</label>
 											<select name="document_group[]" id="document_group" multiple="multiple" class="multi-select form-control">
+												@php
+												$selected = array();
+												if($loan->document_group){
+													$selected = json_decode($loan->document_group);
+												}
 												
+												@endphp
                                                 @foreach($DocumentGroup as $group)
-                                                <option @if(in_array($group->id,json_decode($loan->document_group))) selected @endif value="{{$group->id}}">{{$group->title}}</option>
+                                                <option @if(in_array($group->id,$selected)) selected @endif value="{{$group->id}}">{{$group->title}}</option>
                                                 @endforeach
 											</select>
 										</div>

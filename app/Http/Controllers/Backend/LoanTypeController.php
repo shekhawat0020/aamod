@@ -138,9 +138,14 @@ class LoanTypeController extends Controller
 		$fieldId = implode(',',json_decode($loan->loan_fields));
 		
         $fields = LoanField::where('status', 1)->orderByRaw("FIELD(id, $fieldId)")->get();
+		if($loan->document_group){
 		$documentId = implode(',',json_decode($loan->document_group));
+		}else{
+			$documentId = "0";
+		}
 		
 		$DocumentGroup = DocumentGroup::where('status', 1)->orderByRaw("FIELD(id, $documentId)")->get();
+		
         return view('admin.loan-type.loan-type-edit',compact('loan', 'fields', 'DocumentGroup'));
     }
 
