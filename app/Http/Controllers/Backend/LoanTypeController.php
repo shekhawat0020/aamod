@@ -187,7 +187,7 @@ class LoanTypeController extends Controller
         $loan = LoanType::find($id);
         $loan->title = $request->title;
         $loan->loan_fields = json_encode($request->loan_fields);
-        $loan->document_group = $request->document_group;
+        $loan->document_group = json_encode($request->document_group);
         $loan->status = $request->status;
         $loan->description = $request->description;
 		if($imageName){
