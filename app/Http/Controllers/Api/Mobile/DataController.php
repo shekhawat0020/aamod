@@ -153,16 +153,17 @@ class DataController extends Controller
 			]);
         }
 		
-		$loans = Loan::with('assign_detail')
-		->with('borrower_detail')
+		$loans = Loan::with('borrower_detail')
 		->with('loan_type_detail')
 		->with('loan_type_detail')
 		->with(['loan_bank' => function($query){
 			
 			$query->with(['loan_bank_all_status_detail' => function($q){
 				
+				$q->with('bank_assign_to');
 				$q->with('loan_status_detail');
 				$q->with('loan_sub_status_detail');
+				
 				
 			}]);
 			
