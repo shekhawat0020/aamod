@@ -38,7 +38,16 @@ class DataController extends Controller
 		$loanfieldsArray = json_decode($loanType->loan_fields);
 		$loanfields = implode(',',json_decode($loanType->loan_fields));
 		//$fields = LoanField::whereIn('id', $loanfields)->get();
-		$fields = LoanField::where('status', 1)->whereIn('id', $loanfieldsArray)->orderByRaw("FIELD(id, $loanfields)")->get();
+		$fields = LoanField::where('status', 1)
+		->whereIn('id', $loanfieldsArray)
+		->orderByRaw("FIELD(id, $loanfields)")->get()
+		->map(function ($f) {			
+			$f->condition_field = (is_null($f->condition_field )) ? "" : $f->condition_field ;			
+			$f->condition_value = (is_null($f->condition_value )) ? "" : $f->condition_value ;			
+			return $f;
+		});
+		
+		
 		//$fields = $fields->sortBy(function ($model) use ($loanfields) {
 		//	return array_search($model->id, $loanfields);
 		//});

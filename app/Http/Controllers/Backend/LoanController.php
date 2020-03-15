@@ -5,6 +5,8 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\LoanType;
 use App\Loan;
+use App\DocumentGroup;
+use App\DocumentField;
 use App\LoanField;
 use App\LoanStatus;
 use App\LoanBank;
@@ -159,7 +161,27 @@ class LoanController extends Controller
 		
 		$loan_type_id = $loan->loan_type_id;
 		$loanType = LoanType::where('id', $loan->loan_type_id)->first();
+		
 		$loanfields = json_decode($loanType->loan_fields);
+		$document_group = json_decode($loanType->document_group);
+		
+		
+		
+		
+		$dGroups = DocumentGroup::whereIn('id', $document_group)->get();
+		
+		$dGroupFields = array();
+		
+		foreach($dGroups as $dGroup){
+			
+			$fieldsid = json_decode($dGroup->document_fields);
+			$dfields = DocumentField::whereIn('id', $fieldsid)->get();
+			$arr['group'] = $dGroup;
+			$arr['document_fields'] = $dfields;
+			$dGroupFields[] = $arr;
+		}
+		
+		dd($dGroupFields);
 		
 		
 		$fields = LoanField::whereIn('id', $loanfields)->get();
