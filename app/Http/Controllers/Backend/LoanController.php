@@ -398,7 +398,7 @@ class LoanController extends Controller
 		$validator = Validator::make($request->all(), [
             'loan_bank_id' => 'required|exists:loan_bank,id',
             'loan_status' => 'required',
-            'loan_sub_status' => 'required',
+            'loan_sub_status' => '',
             'internal_comment' => '',
             'external_comment' => '',
             'ps_loan_date' => 'required',
